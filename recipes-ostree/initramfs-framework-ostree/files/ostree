@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# We consider the ostree module always enabled if it is installed.
+ostree_enabled () {
+    if [ -d /rootfs/ostree/deploy ]; then
+        return 0
+    else
+        info "ostree: doesn't look like an ostree-based image... disabling."
+        return 1
+    fi
+}
+
+# Prepare the latest ostree deployment for pivot-rooting it.
+ostree_prepare_root () {
+    local _root
+
+    # here's our deployment root
+    _root="/rootfs/$ostree"
+
+    # make the deployment root mount-moveable
+    mount --bind $_root $_root || return 1
+
+    # We need to prepare the ostree deployment root to be kosher for
+    # pivot-rooting and thus eventually becoming the final root.
+    # This involves stitching it together from several pieces to fill
+    # in the missing details. Currently we do this as follows:
+    #
+    #   - bind-mount the common /var into the deployment
+    #   - bind-mount the common /boot into the deployment
+    #   - bind-mount the common /home into the deployment
+
+    mount --bind $_root/../../var $_root/var && \
+        mount --bind /rootfs/boot $_root/boot && \
+        mount --bind /rootfs/home $_root/home || \
+            return 1
+
+    # Finally shuffle /rootfs to $_root/sysroot and $_root to /rootfs.
+    #
+    # This code mimicks the last bits of ostree-prepare-root. It shuffles
+    # /sysroot, /rootfs, and the chosen ostree deployment root ($_root) around
+    # so that /rootfs becomes $_root/sysroot and $_root becomes /rootfs. Then
+    # eventually after the final pivot-root we end up with
+    #
+    #   - current $_root (IOW the ostree deployment root) as /
+    #   - current /rootfs as /sysroot
+    #
+    # The only tricky/difficult to follow extra bit here is that we have to
+    # do these operations with an extra step to avoid trying to move the
+    # eventual /sysroot (now /rootfs) under itself.
+
+    mkdir -p /sysroot.tmp && \
+        mount --move $_root /sysroot.tmp && \
+        mount --move /rootfs /sysroot.tmp/sysroot && \
+        mount --move /sysroot.tmp /rootfs || \
+            return 1
+
+    return 0
+}
+
+
+# Run the ostree image setup sequence.
+ostree_run () {
+    if ! ostree_prepare_root; then
+        fatal "ERROR: failed to prepare ostree deployment"
+    else
+        return 0
+    fi
+}

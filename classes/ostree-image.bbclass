@@ -23,7 +23,7 @@ IMAGE_FEATURES[validitems] += " \
 
 # rekit-ostree RDEPENDS on ostree, so we don't need to list that here.
 FEATURE_PACKAGES_ostree = " \
-    refkit-ostree \
+    refkit-ostree-upgrade \
 "
 
 # Additional sanity checking. Complements ostree-sanity in INHERIT.

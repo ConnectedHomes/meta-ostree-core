@@ -113,9 +113,9 @@ def get_file_list(filenames):
         filelist.append(filename + ":" + str(os.path.exists(filename)))
     return ' '.join(filelist)
 
-do_ostree_prepare_rootfs[file-checksums] += "${@get_file_list(( \
-   '${FLATPAKBASE}/scripts/gpg-keygen.sh', \
-))}"
+#do_ostree_prepare_rootfs[file-checksums] += "${@get_file_list(( \
+#   '${FLATPAKBASE}/scripts/gpg-keygen.sh', \
+#)}"
 
 # TODO: ostree-native depends on ca-certificates,
 # and is probably affected by https://bugzilla.yoctoproject.org/show_bug.cgi?id=9883.

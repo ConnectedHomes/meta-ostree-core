@@ -4,12 +4,16 @@ import oe.path
 import glob
 import hashlib
 import os.path
+import re
 import shutil
 import string
 import subprocess
 
 VARIABLES = (
+    'DEPLOY_DIR_IMAGE',
     'IMAGE_ROOTFS',
+    'INITRAMFS_IMAGE',
+    'MACHINE',
     'OSTREE_BRANCHNAME',
     'OSTREE_COMMIT_SUBJECT',
     'OSTREE_REPO',
@@ -74,7 +78,7 @@ class OSTreeUpdate(string.Formatter):
         bb.note(self.format('Copying pristine rootfs {IMAGE_ROOTFS} to OSTree sysroot {OSTREE_SYSROOT} ...'))
         oe.path.copyhardlinktree(self.IMAGE_ROOTFS, self.OSTREE_SYSROOT)
 
-    def copy_kernel(self):
+    def copy_kernel_efi(self):
         """
         Copy and checksum kernel, initramfs, and the UEFI app in place for OSTree.
         TODO: why?
@@ -124,6 +128,52 @@ class OSTreeUpdate(string.Formatter):
         # For now just create dummy files.
         open(kernel + '-' + chksum, 'w').close()
         open(initrd + '-' + chksum, 'w').close()
+
+    def copy_kernel_uboot(self):
+        """
+        Copy kernel, initramfs, and U-Boot config for OSTree.
+        """
+        bootdir = os.path.join(self.IMAGE_ROOTFS, 'boot')
+        kernels = glob.glob(os.path.join(bootdir, 'zImage-*'))
+        if len(kernels) != 1:
+            bb.fatal(self.format('Ambiguous kernel in {0}: {1}', bootdir, kernels))
+        base = os.path.basename(kernels[0])
+        version = re.search('zImage-(?P<version>.*)', base).group('version')
+
+        modules = os.path.join(self.OSTREE_SYSROOT, 'usr', 'lib', 'modules',
+                               version)
+        versionedzimage = os.path.join(modules, 'vmlinuz')
+        os.link(kernels[0], versionedzimage)
+
+        dtbs = glob.glob(os.path.join(bootdir, '*.dtb*'))
+        dtbdir = os.path.join(modules, 'dtb')
+        bb.utils.mkdirhier(dtbdir)
+        for dtb in dtbs:
+            if not os.path.islink(dtb):
+                versioneddtb = os.path.join(dtbdir, os.path.basename(dtb))
+                os.link(dtb, versioneddtb)
+
+    def copy_kernel_fitimage(self):
+        """
+        Copy FIT image
+        """
+        fitimage = os.path.realpath(os.path.join(self.DEPLOY_DIR_IMAGE,
+                                                 self.format('fitImage-{0}-{1}.bin', self.INITRAMFS_IMAGE, self.MACHINE)))
+        modules = os.path.join(self.OSTREE_SYSROOT, 'usr', 'lib', 'modules')
+        modvers = glob.glob(os.path.join(modules, '*'))
+        if len(modvers) != 1:
+            bb.fatal(self.format('Ambiguous modules in {0}: {1}', modules, modvers))
+        moduledir = modvers[0]
+        versionedzimage = os.path.join(moduledir, 'vmlinuz')
+        os.link(fitimage, versionedzimage)
+
+        dtbs = glob.glob(os.path.join(self.IMAGE_ROOTFS, 'boot', '*.dtb*'))
+        dtbdir = os.path.join(moduledir, 'dtb')
+        bb.utils.mkdirhier(dtbdir)
+        for dtb in dtbs:
+            if not os.path.islink(dtb):
+                versioneddtb = os.path.join(dtbdir, os.path.basename(dtb))
+                os.link(dtb, versioneddtb)
 
     def ostreeify_sysroot(self):
         """
@@ -199,7 +249,9 @@ class OSTreeUpdate(string.Formatter):
 
         bb.note(self.format('Preparing OSTree sysroot {OSTREE_SYSROOT} ...'))
         self.copy_sysroot()
-        self.copy_kernel()
+        #self.copy_kernel_efi()
+        #self.copy_kernel_uboot()
+        self.copy_kernel_fitimage()
         self.ostreeify_sysroot()
 
     def populate_repo(self):
@@ -233,6 +285,14 @@ class OSTreeUpdate(string.Formatter):
         self.run_ostree('admin --sysroot={OSTREE_ROOTFS} init-fs {OSTREE_ROOTFS}')
         self.run_ostree('admin --sysroot={OSTREE_ROOTFS} os-init {OSTREE_OS}')
 
+        if True:
+            bb.note(self.format('Creating U-Boot uEnv.txt in OSTree rootfs {OSTREE_ROOTFS} ...'))
+
+            loader = os.path.join(self.OSTREE_ROOTFS, 'boot', 'loader.0')
+            bb.utils.mkdirhier(loader)
+            os.symlink('loader.0', os.path.join(self.OSTREE_ROOTFS, 'boot', 'loader'))
+            open(os.path.join(loader, 'uEnv.txt'), 'w').close()
+
         bb.note(self.format('Replicating primary OSTree repository {OSTREE_BARE} branch {OSTREE_BRANCHNAME} into OSTree rootfs {OSTREE_ROOTFS} ...'))
         self.run_ostree('--repo={OSTREE_ROOTFS}/ostree/repo pull-local --remote=updates {OSTREE_BARE} {OSTREE_BRANCHNAME}')
 
@@ -257,8 +317,9 @@ class OSTreeUpdate(string.Formatter):
         """
         Finalize the physical root directory after the ostree checkout.
         """
-        bb.note(self.format('Creating EFI mount point /boot/efi in OSTree rootfs {OSTREE_ROOTFS} ...'))
-        bb.utils.mkdirhier(os.path.join(self.OSTREE_ROOTFS, 'boot', 'efi'))
+        if False:
+            bb.note(self.format('Creating EFI mount point /boot/efi in OSTree rootfs {OSTREE_ROOTFS} ...'))
+            bb.utils.mkdirhier(os.path.join(self.OSTREE_ROOTFS, 'boot', 'efi'))
 
         bb.note(self.format('Copying pristine rootfs {IMAGE_ROOTFS}/home to OSTree rootfs {OSTREE_ROOTFS} ...'))
         oe.path.copyhardlinktree(os.path.join(self.IMAGE_ROOTFS, 'home'),

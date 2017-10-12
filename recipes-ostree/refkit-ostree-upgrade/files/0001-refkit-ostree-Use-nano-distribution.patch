@@ -1,0 +1,25 @@
+From a3304fdeaf4eff6101d3f0bd4d3335181b7ce9eb Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@hivehome.com>
+Date: Thu, 12 Oct 2017 19:29:56 +0000
+Subject: [PATCH] refkit-ostree: Use nano distribution
+
+---
+ src/refkit-ostree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/refkit-ostree.c b/src/refkit-ostree.c
+index 8c4b0af..b4ab0cd 100644
+--- a/src/refkit-ostree.c
++++ b/src/refkit-ostree.c
+@@ -50,7 +50,7 @@
+ #define UPDATER_HOOK(path) HOOK_DIR"/"path
+ #define UPDATER_HOOK_APPLY UPDATER_HOOK("post-apply")
+ #define UPDATER_INTERVAL   (15 * 60)
+-#define UPDATER_DISTRO     "refkit"
++#define UPDATER_DISTRO     "nano"
+ #define UPDATER_PREFIX     "REFKIT_OSTREE"
+ 
+ /* updater modes */
+-- 
+2.7.4
+

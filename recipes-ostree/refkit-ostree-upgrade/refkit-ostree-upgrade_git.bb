@@ -34,7 +34,6 @@ FILES_${PN} = " \
 
 # Our systemd services.
 SYSTEMD_SERVICE_${PN} = " \
-    refkit-patch-ostree-param.service \
     refkit-update.service \
     refkit-reboot.service \
     refkit-update-post-check.service \

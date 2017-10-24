@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE-BSD;md5=f9f435c1bd3a753365e799edf375fc42"
 SRC_URI = " \
     git://github.com/klihub/refkit-ostree-upgrade.git \
     file://0001-refkit-ostree-Use-nano-distribution.patch \
+    file://0001-post-update-check-Merge-changes-from-refkit-core.patch \
 "
 
 # Modify these as desired

@@ -217,6 +217,7 @@ class OSTreeUpdate(string.Formatter):
 
         sysroot = os.path.join(self.OSTREE_SYSROOT, 'sysroot')
         bb.utils.mkdirhier(sysroot)
+        bb.utils.mkdirhier(os.path.join(sysroot, 'tmp'))
         os.symlink('sysroot/ostree', os.path.join(self.OSTREE_SYSROOT, 'ostree'))
 
         for dir, link in (
@@ -305,6 +306,8 @@ class OSTreeUpdate(string.Formatter):
         bb.note(self.format('Copying /var from rootfs to OSTree rootfs as {} ...', dst))
         shutil.rmtree(dst)
         oe.path.copyhardlinktree(src, dst)
+        mnt = os.path.join(self.OSTREE_ROOTFS, 'ostree', 'deploy', self.OSTREE_OS, 'var', 'mnt')
+        bb.utils.mkdirhier(mnt)
 
         if self.OSTREE_REMOTE:
             bb.note(self.format('Setting OSTree remote to {OSTREE_REMOTE} ...'))

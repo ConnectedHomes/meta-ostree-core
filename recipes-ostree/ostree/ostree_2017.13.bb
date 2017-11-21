@@ -9,9 +9,9 @@ SRC_URI = " \
     file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
 "
 
-SRCREV = "64f3257d8832edf6855052b5c8a3fc5250279499"
+SRCREV = "ae61321046ad7f4148a5884c8c6c8b2594ff840e"
 
-PV = "2017.12+git${SRCPV}"
+PV = "2017.13+git${SRCPV}"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig requires-systemd gobject-introspection

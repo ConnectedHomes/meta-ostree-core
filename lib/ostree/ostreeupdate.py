@@ -166,6 +166,7 @@ class OSTreeUpdate(string.Formatter):
         moduledir = modvers[0]
         versionedzimage = os.path.join(moduledir, 'vmlinuz')
         os.link(fitimage, versionedzimage)
+        os.chown(versionedzimage, 0, 0)
 
         dtbs = glob.glob(os.path.join(self.IMAGE_ROOTFS, 'boot', '*.dtb*'))
         dtbdir = os.path.join(moduledir, 'dtb')

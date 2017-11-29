@@ -126,6 +126,7 @@ def get_file_list(filenames):
 # doesn't matter.
 do_ostree_prepare_rootfs[depends] += " \
     ostree-native:do_populate_sysroot \
+    gnupg1-native:do_populate_sysroot \
 "
 
 # Take a per-build OSTree bare-user repository and export it to an

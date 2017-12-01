@@ -16,6 +16,11 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig requires-systemd gobject-introspection
 
+do_install_append_class-target () {
+    rm -r ${D}${sysconfdir}/grub.d
+    rm ${D}${libexecdir}/libostree/grub2-15_ostree
+}
+
 DEPENDS = " \
     glib-2.0 libsoup-2.4 gpgme e2fsprogs \
     libcap fuse libarchive zlib xz \
@@ -48,17 +53,29 @@ EXTRA_OECONF_class-native += " \
 PACKAGES += " \
     ${PN}-systemd-generator \
     ${PN}-bash-completion \
+    ${PN}-prepare-root \
 "
 
-FILES_${PN} += " \
-    ${libdir}/girepository-1.0 ${datadir}/gir-1.0 \
+SYSTEMD_SERVICE_${PN} = "ostree-remount.service"
+SYSTEMD_SERVICE_${PN}-prepare-root = "ostree-prepare-root.service"
+
+FILES_${PN} = " \
+    ${bindir}/* \
+    ${sysconfdir} \
+    ${libdir}/lib*${SOLIBS} \
+    ${libdir}/girepository-1.0 \
     ${libdir}/tmpfiles.d/ostree*.conf \
+    ${libdir}/${BPN}/ostree-remount \
+    ${datadir}/${BPN} \
+    ${datadir}/gir-1.0 \
+    ${libexecdir}/* \
 "
-SYSTEMD_SERVICE_${PN} = "ostree-prepare-root.service ostree-remount.service"
-
 FILES_${PN}-systemd-generator = "${libdir}/systemd/system-generators"
 FILES_${PN}-bash-completion = "${datadir}/bash-completion/completions/ostree"
-
+FILES_${PN}-prepare-root = " \
+    ${libdir}/ostree/ostree-prepare-root \
+    ${libdir}/systemd/system/ostree-prepare-root.service \
+"
 
 do_configure_prepend() {
     cd ${S}

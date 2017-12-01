@@ -1,0 +1,26 @@
+From c0ff3f492b336525b5994f8e9c5418630052e14a Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@hivehome.com>
+Date: Fri, 1 Dec 2017 12:37:28 +0000
+Subject: [PATCH] ostree-tmpfiles: Include ref changes
+
+Pull in the reference changes for tmpfiles so ostree-prepare-root
+works correctly
+---
+ src/boot/ostree-tmpfiles.conf | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/boot/ostree-tmpfiles.conf b/src/boot/ostree-tmpfiles.conf
+index 49e2dcb..9293aa9 100644
+--- a/src/boot/ostree-tmpfiles.conf
++++ b/src/boot/ostree-tmpfiles.conf
+@@ -17,3 +17,7 @@
+ 
+ # https://github.com/ostreedev/ostree/issues/393
+ R! /var/tmp/ostree-unlock-ovl.*
++d /var/log/journal 0755 root root -
++L /var/home - - - - ../sysroot/home
++d /var/mnt 0755 root root -
++d /run/media 0755 root root -
+-- 
+2.7.4
+

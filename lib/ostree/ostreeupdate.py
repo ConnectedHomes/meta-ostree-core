@@ -224,7 +224,7 @@ class OSTreeUpdate(string.Formatter):
         for dir, link in (
                 ('boot', None),
                 ('var', None),
-                ('home', None),
+                ('home', 'var/home'),
                 ('mnt', 'var/mnt'),
                 ('tmp', 'sysroot/tmp'),
         ):

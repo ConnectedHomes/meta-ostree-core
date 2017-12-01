@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 SRC_URI = " \
     gitsm://git@github.com/ostreedev/ostree;protocol=https \
     file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
+    file://0001-ostree-tmpfiles-Include-ref-changes.patch \
 "
 
 SRCREV = "ae61321046ad7f4148a5884c8c6c8b2594ff840e"

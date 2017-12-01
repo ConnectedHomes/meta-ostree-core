@@ -221,12 +221,17 @@ class OSTreeUpdate(string.Formatter):
         bb.utils.mkdirhier(os.path.join(sysroot, 'tmp'))
         os.symlink('sysroot/ostree', os.path.join(self.OSTREE_SYSROOT, 'ostree'))
 
+        # Relocate /opt into read-only /usr/opt
+        os.rename(os.path.join(self.OSTREE_SYSROOT, 'opt'),
+                  os.path.join(self.OSTREE_SYSROOT, 'usr', 'opt'))
+
         for dir, link in (
                 ('boot', None),
                 ('var', None),
                 ('home', 'var/home'),
                 ('mnt', 'var/mnt'),
                 ('tmp', 'sysroot/tmp'),
+                ('opt', 'usr/opt'),
         ):
             path = os.path.join(self.OSTREE_SYSROOT, dir)
             if os.path.isdir(path):

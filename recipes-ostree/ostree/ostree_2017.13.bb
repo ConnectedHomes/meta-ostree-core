@@ -45,17 +45,20 @@ EXTRA_OECONF_class-native += " \
 "
 
 # package content
-PACKAGES += "${PN}-systemd-generator"
+PACKAGES += " \
+    ${PN}-systemd-generator \
+    ${PN}-bash-completion \
+"
 
 FILES_${PN} += " \
-    ${libdir}/girepository-1.0 \
-    ${datadir}/gir-1.0 \
-    ${datadir}/bash-completion/completions/ostree \
-    ${libdir}/tmpfiles.d/ostree-tmpfiles.conf \
+    ${libdir}/girepository-1.0 ${datadir}/gir-1.0 \
+    ${libdir}/tmpfiles.d/ostree*.conf \
 "
 SYSTEMD_SERVICE_${PN} = "ostree-prepare-root.service ostree-remount.service"
 
 FILES_${PN}-systemd-generator = "${libdir}/systemd/system-generators"
+FILES_${PN}-bash-completion = "${datadir}/bash-completion/completions/ostree"
+
 
 do_configure_prepend() {
     cd ${S}

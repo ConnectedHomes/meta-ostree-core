@@ -12,5 +12,9 @@ ostree_enabled () {
 
 # Run the ostree image setup sequence.
 ostree_run () {
-    /usr/lib/ostree/ostree-prepare-root /rootfs
+    if [ "$bootparam_quiet" = "true" ]; then
+        /usr/lib/ostree/ostree-prepare-root /rootfs >/dev/null
+    else
+        /usr/lib/ostree/ostree-prepare-root /rootfs
+    fi
 }

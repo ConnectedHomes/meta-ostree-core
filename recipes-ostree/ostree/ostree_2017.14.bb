@@ -42,6 +42,9 @@ AUTO_LIBNAME_PKGS = ""
 # package configuration
 PACKAGECONFIG ??= ""
 
+PACKAGECONFIG[curl] = "--with-curl, --without-curl, curl"
+PACKAGECONFIG[man] = "--enable-man, --disable-man"
+
 EXTRA_OECONF_class-target += "--disable-man"
 EXTRA_OECONF_class-native += " \
     --disable-man \

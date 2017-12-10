@@ -10,9 +10,9 @@ SRC_URI = " \
     file://0001-ostree-tmpfiles-Include-ref-changes.patch \
 "
 
-SRCREV = "ae61321046ad7f4148a5884c8c6c8b2594ff840e"
+SRCREV = "b0f9a298165a99d5621073bd9e1b10f13058e838"
 
-PV = "2017.13+git${SRCPV}"
+PV = "2017.14+git${SRCPV}"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig requires-systemd gobject-introspection

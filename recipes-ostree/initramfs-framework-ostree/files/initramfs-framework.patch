@@ -1,0 +1,36 @@
+diff --git a/init b/init
+index 37527a8..92049b0 100755
+--- a/init
++++ b/init
+@@ -76,6 +76,13 @@ MODULES_DIR=/init.d  # place to look for modules
+ # make mount stop complaining about missing /etc/fstab
+ touch /etc/fstab
+ 
++# stop e2fsck from complaining about /etc/mtab
++ln -s /proc/mounts /etc/mtab
++
++# mount /run so we can pass it over into our boot image
++mkdir /run
++mount -t tmpfs tmpfs /run
++
+ # initialize /proc, /sys, /run/lock and /var/lock
+ mkdir -p /proc /sys /run/lock /var/lock
+ mount -t proc proc /proc
+diff --git a/rootfs b/rootfs
+index 14768f1..4f088fb 100644
+--- a/rootfs
++++ b/rootfs
+@@ -44,6 +44,13 @@ rootfs_run() {
+ 				fi
+ 				if [ -n "$bootparam_rootfstype" ]; then
+ 					flags="$flags -t$bootparam_rootfstype"
++					fsck=fsck.$bootparam_rootfstype
++				else
++					fsck=fsck
++				fi
++				$fsck -p -f $bootparam_root
++				if [ $? = 4 ]; then
++					fatal "root '$bootparam_root' corrupted."
+ 				fi
+ 				mount $flags $bootparam_root $ROOTFS_DIR
+ 				if [ -d $ROOTFS_DIR/dev ]; then

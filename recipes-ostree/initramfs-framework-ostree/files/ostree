@@ -12,5 +12,8 @@ ostree_enabled () {
 
 # Run the ostree image setup sequence.
 ostree_run () {
-    /usr/lib/ostree/ostree-prepare-root /rootfs
+    /usr/lib/ostree/ostree-prepare-root $ROOTFS_DIR
+    # Ensure we pass initramfs /run into booted image
+    cd $ROOTFS_DIR
+    mount --bind ../run run
 }

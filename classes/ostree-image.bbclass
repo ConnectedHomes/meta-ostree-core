@@ -74,7 +74,7 @@ OSTREE_REPO ?= "${DEPLOY_DIR}/ostree-repo"
 # In development images the default is to use a pregenerated key from
 # an in-repo keyring. Production images do not have a default.
 #
-OSTREE_GPGDIR ?= "${@ '' if (d.getVar('IMAGE_MODE') or 'production') == 'production' else '${META_REFKIT_CORE_BASE}/files/gnupg' }"
+OSTREE_GPGDIR ?= "${@ '' if (d.getVar('IMAGE_MODE') or 'production') == 'production' else '${META_OSTREE_CORE_BASE}/files/gnupg' }"
 OSTREE_GPGID_DEFAULT = "${@d.getVar('DISTRO').replace(' ', '_') + '-development-signing@key'}"
 OSTREE_GPGID ?= "${@ '' if (d.getVar('IMAGE_MODE') or 'production') == 'production' else '${OSTREE_GPGID_DEFAULT}' }"
 

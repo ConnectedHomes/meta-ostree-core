@@ -44,10 +44,9 @@ PACKAGECONFIG ??= ""
 
 PACKAGECONFIG[curl] = "--with-curl, --without-curl, curl"
 PACKAGECONFIG[man] = "--enable-man, --disable-man"
+PACKAGECONFIG[no-http2] = "--disable-http2"
 
-EXTRA_OECONF_class-target += "--disable-man"
 EXTRA_OECONF_class-native += " \
-    --disable-man \
     --with-builtin-grub2-mkconfig \
     --enable-wrpseudo-compat \
     --disable-otmpfile \

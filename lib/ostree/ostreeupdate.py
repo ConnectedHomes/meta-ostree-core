@@ -40,7 +40,7 @@ class OSTreeUpdate(string.Formatter):
 
     def __init__(self, d):
         for var in VARIABLES:
-            value = d.getVar(var)
+            value = d.getVar(var) or ""
             if var not in self.WHITESPACES_ALLOWED:
                 for c in '\n\t ':
                     if c in value:
@@ -157,8 +157,12 @@ class OSTreeUpdate(string.Formatter):
         """
         Copy FIT image
         """
-        fitimage = os.path.realpath(os.path.join(self.DEPLOY_DIR_IMAGE,
-                                                 self.format('fitImage-{0}-{1}.bin', self.INITRAMFS_IMAGE, self.MACHINE)))
+        if self.INITRAMFS_IMAGE:
+            fitimage = os.path.realpath(os.path.join(self.DEPLOY_DIR_IMAGE,
+                                                     self.format('fitImage-{0}-{1}.bin', self.INITRAMFS_IMAGE, self.MACHINE)))
+        else:
+            fitimage = os.path.realpath(os.path.join(self.DEPLOY_DIR_IMAGE,
+                                                     self.format('fitImage-{0}.bin', self.MACHINE)))
         modules = os.path.join(self.OSTREE_SYSROOT, 'usr', 'lib', 'modules')
         modvers = glob.glob(os.path.join(modules, '*'))
         if len(modvers) != 1:

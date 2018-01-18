@@ -25,6 +25,7 @@ IMAGE_FEATURES[validitems] += " \
 FEATURE_PACKAGES_ostree = " \
     refkit-ostree-upgrade \
     ostree-systemd-generator \
+    os-release \
 "
 
 # Additional sanity checking. Complements ostree-sanity in INHERIT.

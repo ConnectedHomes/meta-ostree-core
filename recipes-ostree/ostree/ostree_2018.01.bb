@@ -8,6 +8,8 @@ SRC_URI = " \
     gitsm://git@github.com/ostreedev/ostree;protocol=https \
     file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
     file://0001-ostree-tmpfiles-Include-ref-changes.patch \
+    file://0001-Fix-misquoted-test.patch \
+    file://0001-ostree-prepare-root-Fix-split-build-src-compilation.patch \
 "
 
 SRCREV = "d3fa95023e1d944f5923064d5b19cc6ee62cf80a"
@@ -45,6 +47,10 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[curl] = "--with-curl, --without-curl, curl"
 PACKAGECONFIG[man] = "--enable-man, --disable-man"
 PACKAGECONFIG[no-http2] = "--disable-http2"
+
+EXTRA_OECONF += " \
+    --with-static-compiler='${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}' \
+"
 
 EXTRA_OECONF_class-native += " \
     --with-builtin-grub2-mkconfig \

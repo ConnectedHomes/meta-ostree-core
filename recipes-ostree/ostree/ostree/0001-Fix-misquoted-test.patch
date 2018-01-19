@@ -1,0 +1,25 @@
+From 9c77cb10b347ccc4e97541e2206bcfa6035abecf Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@hivehome.com>
+Date: Thu, 18 Jan 2018 19:29:05 +0000
+Subject: [PATCH] Fix misquoted test
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index a4e1e74..758e225 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -519,7 +519,7 @@ AC_ARG_WITH(static-compiler,
+             AS_HELP_STRING([--with-static-compiler],
+                            [Use the given compiler to build ostree-prepare-root statically linked (default: no)]),,
+               [with_static_compiler=no])
+-AM_CONDITIONAL(BUILDOPT_USE_STATIC_COMPILER, test x$with_static_compiler != xno)
++AM_CONDITIONAL(BUILDOPT_USE_STATIC_COMPILER, test "x$with_static_compiler" != xno)
+ AC_SUBST(STATIC_COMPILER, $with_static_compiler)
+ 
+ dnl for tests (but we can't use asan with gjs or any introspection,
+-- 
+2.7.4
+

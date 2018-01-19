@@ -37,6 +37,7 @@ DEPENDS_class-native = " \
 
 RDEPENDS_${PN}_class-target = " \
     gnupg \
+    ${PN}-prepare-root \
 "
 
 AUTO_LIBNAME_PKGS = ""

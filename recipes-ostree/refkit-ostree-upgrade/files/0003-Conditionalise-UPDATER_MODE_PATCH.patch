@@ -1,0 +1,106 @@
+From 298832e362e4af8955358dd176c3abd022b3b6ad Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@hivehome.com>
+Date: Mon, 22 Jan 2018 07:55:55 +0000
+Subject: [PATCH 3/4] Conditionalise UPDATER_MODE_PATCH
+
+---
+ src/refkit-ostree.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/src/refkit-ostree.c b/src/refkit-ostree.c
+index a7a9bee..41c96d1 100644
+--- a/src/refkit-ostree.c
++++ b/src/refkit-ostree.c
+@@ -62,7 +62,9 @@ enum {
+     UPDATER_MODE_ENTRIES,                    /* parse and show boot entries */
+     UPDATER_MODE_RUNNING,                    /* show running entry */
+     UPDATER_MODE_LATEST,                     /* show running entry */
++#ifdef __REFKIT_PATCH__
+     UPDATER_MODE_PATCH,                      /* patch /proc/cmdline */
++#endif
+ #ifdef __REFKIT_PREPARE__
+     UPDATER_MODE_PREPARE,                    /* prepare root from initramfs */
+ #endif
+@@ -245,7 +247,9 @@ static void set_defaults(context_t *c, const char *argv0)
+ #define OPTION_ENTRIES "-b/boot-entries"
+ #define OPTION_RUNNING "-r/running-entry"
+ #define OPTION_LATEST  "-L/latest-entry"
++#ifdef __REFKIT_PATCH__
+ #define OPTION_PATCH   "-p/patch-procfs"
++#endif
+ #ifdef __REFKIT_PREPARE__
+ #define OPTION_PREPARE "-I/--prepare-root"
+ #endif
+@@ -258,7 +262,9 @@ static const char *mode_option(int mode)
+     case UPDATER_MODE_ENTRIES: return OPTION_ENTRIES;
+     case UPDATER_MODE_RUNNING: return OPTION_RUNNING;
+     case UPDATER_MODE_LATEST:  return OPTION_LATEST;
++#ifdef __REFKIT_PATCH__
+     case UPDATER_MODE_PATCH:   return OPTION_PATCH;
++#endif
+ #ifdef __REFKIT_PREPARE__
+     case UPDATER_MODE_PREPARE: return OPTION_PREPARE;
+ #endif
+@@ -295,7 +301,9 @@ static void print_usage(const char *argv0, int exit_code, const char *fmt, ...)
+             "  -b, --boot-entries           list boot entries\n"
+             "  -r, --running-entry          show running entry\n"
+             "  -L, --latest-entry           show latest local available entry\n"
++#ifdef __REFKIT_PATCH__
+             "  -p, --patch-procfs           patch /proc/cmdline\n"
++#endif
+ #ifdef __REFKIT_PREPARE__
+             "  -I, --prepare-root           prepare root (from initramfs)\n"
+ #endif
+@@ -680,7 +688,9 @@ static void parse_cmdline(context_t *c, int argc, char **argv)
+         { "boot-entries"   , no_argument      , NULL, 'b' },
+         { "running-entry"  , no_argument      , NULL, 'r' },
+         { "latest-entry"   , no_argument      , NULL, 'L' },
++#ifdef __REFKIT_PATCH__
+         { "patch-procfs"   , no_argument      , NULL, 'p' },
++#endif
+ #ifdef __REFKIT_PREPARE__
+         { "prepare-root"   , no_argument      , NULL, 'I' },
+ #endif
+@@ -720,9 +730,11 @@ static void parse_cmdline(context_t *c, int argc, char **argv)
+             set_mode(c, UPDATER_MODE_LATEST);
+             break;
+ 
++#ifdef __REFKIT_PATCH__
+         case 'p':
+             set_mode(c, UPDATER_MODE_PATCH);
+             break;
++#endif
+ 
+ #ifdef __REFKIT_PREPARE__
+         case 'I':
+@@ -1535,6 +1547,7 @@ static void initramfs_prepare(context_t *c)
+ }
+ #endif
+ 
++#ifdef __REFKIT_PATCH__
+ static void patch_procfs(context_t *c)
+ {
+     boot_entry_t *boot;
+@@ -1608,6 +1621,7 @@ static void patch_procfs(context_t *c)
+     unlink(patched);
+     exit(0);
+ }
++#endif
+ 
+ 
+ int main(int argc, char *argv[])
+@@ -1631,9 +1645,11 @@ int main(int argc, char *argv[])
+         print_latest(&c);
+         break;
+ 
++#ifdef __REFKIT_PATCH
+     case UPDATER_MODE_PATCH:
+         patch_procfs(&c);
+         break;
++#endif
+ 
+ #ifdef __REFKIT_PREPARE__
+     case UPDATER_MODE_PREPARE:
+-- 
+2.7.4
+

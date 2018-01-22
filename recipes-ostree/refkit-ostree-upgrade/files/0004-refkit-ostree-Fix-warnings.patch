@@ -1,0 +1,78 @@
+From 6f75148ac5a5a06b4391ddd902aac790b37454c8 Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@hivehome.com>
+Date: Mon, 22 Jan 2018 07:59:00 +0000
+Subject: [PATCH 4/4] refkit-ostree: Fix warnings
+
+---
+ src/refkit-ostree.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/src/refkit-ostree.c b/src/refkit-ostree.c
+index 41c96d1..a77988f 100644
+--- a/src/refkit-ostree.c
++++ b/src/refkit-ostree.c
+@@ -799,6 +799,7 @@ static void parse_cmdline(context_t *c, int argc, char **argv)
+ 
+         case 'h':
+             print_usage(argv[0], 0, "");
++            break;
+ 
+         case '?':
+             print_usage(argv[0], EINVAL, "invalid option");
+@@ -1326,7 +1327,7 @@ static void print_entries(context_t *c)
+             printf("       options: '%s'\n", e->options);
+             printf("          boot: '%s'\n", e->boot);
+             printf("    deployment: '%s'\n", e->deployment);
+-            printf("       dev/ino: 0x%lx/0x%lx\n", e->device, e->inode);
++            printf("       dev/ino: 0x%llx/0x%lx\n", e->device, e->inode);
+             break;
+ 
+         case PRINT_SHELL_EVAL:
+@@ -1334,7 +1335,7 @@ static void print_entries(context_t *c)
+             printf("%s%s_BOOT%d_VERSION=%d\n", exp, c->prefix, i, e->version);
+             printf("%s%s_BOOT%d_OPTIONS='%s'\n", exp, c->prefix, i, e->options);
+             printf("%s%s_BOOT%d_PATH='%s'\n", exp, c->prefix, i, e->deployment);
+-            printf("%s%s_BOOT%d_DEVICE=0x%lx\n", exp, c->prefix, i, e->device);
++            printf("%s%s_BOOT%d_DEVICE=0x%llx\n", exp, c->prefix, i, e->device);
+             printf("%s%s_BOOT%d_INODE=%lu\n", exp, c->prefix, i, e->inode);
+             break;
+         }
+@@ -1367,7 +1368,7 @@ static void print_running(context_t *c)
+         printf("       options: '%s'\n", e->options);
+         printf("          boot: '%s'\n", e->boot);
+         printf("    deployment: '%s'\n", e->deployment);
+-        printf("       dev/ino: 0x%lx/0x%lx\n", e->device, e->inode);
++        printf("       dev/ino: 0x%llx/0x%lx\n", e->device, e->inode);
+         break;
+ 
+     case PRINT_SHELL_EVAL:
+@@ -1375,7 +1376,7 @@ static void print_running(context_t *c)
+         printf("%s%s_BOOTED_VERSION=%d\n", exp, c->prefix, e->version);
+         printf("%s%s_BOOTED_OPTIONS='%s'\n", exp, c->prefix, e->options);
+         printf("%s%s_BOOTED_PATH='%s'\n", exp, c->prefix, e->deployment);
+-        printf("%s%s_BOOTED_DEVICE=0x%lx\n", exp, c->prefix, e->device);
++        printf("%s%s_BOOTED_DEVICE=0x%llx\n", exp, c->prefix, e->device);
+         printf("%s%s_BOOTED_INODE=%lu\n", exp, c->prefix, e->inode);
+         break;
+     }
+@@ -1407,7 +1408,7 @@ static void print_latest(context_t *c)
+         printf("         options: '%s'\n", e->options);
+         printf("            boot: '%s'\n", e->boot);
+         printf("      deployment: '%s'\n", e->deployment);
+-        printf("         dev/ino: 0x%lx/0x%lx\n", e->device, e->inode);
++        printf("         dev/ino: 0x%llx/0x%lx\n", e->device, e->inode);
+         break;
+ 
+     case PRINT_SHELL_EVAL:
+@@ -1415,7 +1416,7 @@ static void print_latest(context_t *c)
+         printf("%s%s_LATEST_VERSION=%d\n", exp, c->prefix, e->version);
+         printf("%s%s_LATEST_OPTIONS='%s'\n", exp, c->prefix, e->options);
+         printf("%s%s_LATEST_PATH='%s'\n", exp, c->prefix, e->deployment);
+-        printf("%s%s_LATEST_DEVICE=0x%lx\n", exp, c->prefix, e->device);
++        printf("%s%s_LATEST_DEVICE=0x%llx\n", exp, c->prefix, e->device);
+         printf("%s%s_LATEST_INODE=%lu\n", exp, c->prefix, e->inode);
+         break;
+     }
+-- 
+2.7.4
+

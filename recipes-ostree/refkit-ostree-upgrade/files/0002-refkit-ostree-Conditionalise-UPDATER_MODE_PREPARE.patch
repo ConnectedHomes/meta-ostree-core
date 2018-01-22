@@ -1,0 +1,107 @@
+From abff7e3499cb9ec8e8303973c4dcbff399aa4386 Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@hivehome.com>
+Date: Mon, 22 Jan 2018 07:51:34 +0000
+Subject: [PATCH 2/4] refkit-ostree: Conditionalise UPDATER_MODE_PREPARE
+
+---
+ src/refkit-ostree.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/src/refkit-ostree.c b/src/refkit-ostree.c
+index b4ab0cd..a7a9bee 100644
+--- a/src/refkit-ostree.c
++++ b/src/refkit-ostree.c
+@@ -63,7 +63,9 @@ enum {
+     UPDATER_MODE_RUNNING,                    /* show running entry */
+     UPDATER_MODE_LATEST,                     /* show running entry */
+     UPDATER_MODE_PATCH,                      /* patch /proc/cmdline */
++#ifdef __REFKIT_PREPARE__
+     UPDATER_MODE_PREPARE,                    /* prepare root from initramfs */
++#endif
+ };
+ 
+ /* printing modes */
+@@ -244,7 +246,9 @@ static void set_defaults(context_t *c, const char *argv0)
+ #define OPTION_RUNNING "-r/running-entry"
+ #define OPTION_LATEST  "-L/latest-entry"
+ #define OPTION_PATCH   "-p/patch-procfs"
++#ifdef __REFKIT_PREPARE__
+ #define OPTION_PREPARE "-I/--prepare-root"
++#endif
+ 
+ static const char *mode_option(int mode)
+ {
+@@ -255,7 +259,9 @@ static const char *mode_option(int mode)
+     case UPDATER_MODE_RUNNING: return OPTION_RUNNING;
+     case UPDATER_MODE_LATEST:  return OPTION_LATEST;
+     case UPDATER_MODE_PATCH:   return OPTION_PATCH;
++#ifdef __REFKIT_PREPARE__
+     case UPDATER_MODE_PREPARE: return OPTION_PREPARE;
++#endif
+     default:                   return "WTF?";
+     }
+ }
+@@ -290,7 +296,9 @@ static void print_usage(const char *argv0, int exit_code, const char *fmt, ...)
+             "  -r, --running-entry          show running entry\n"
+             "  -L, --latest-entry           show latest local available entry\n"
+             "  -p, --patch-procfs           patch /proc/cmdline\n"
++#ifdef __REFKIT_PREPARE__
+             "  -I, --prepare-root           prepare root (from initramfs)\n"
++#endif
+             "  -s, --shell                  list/show as shell assignment\n"
+             "  -S, --shell-export           use export in shell assignments\n"
+             "  -V, --prefix                 variable prefix in assignments\n"
+@@ -673,7 +681,9 @@ static void parse_cmdline(context_t *c, int argc, char **argv)
+         { "running-entry"  , no_argument      , NULL, 'r' },
+         { "latest-entry"   , no_argument      , NULL, 'L' },
+         { "patch-procfs"   , no_argument      , NULL, 'p' },
++#ifdef __REFKIT_PREPARE__
+         { "prepare-root"   , no_argument      , NULL, 'I' },
++#endif
+         { "shell"          , no_argument      , NULL, 's' },
+         { "shell-export"   , no_argument      , NULL, 'S' },
+         { "prefix"         , required_argument, NULL, 'V' },
+@@ -714,9 +724,11 @@ static void parse_cmdline(context_t *c, int argc, char **argv)
+             set_mode(c, UPDATER_MODE_PATCH);
+             break;
+ 
++#ifdef __REFKIT_PREPARE__
+         case 'I':
+             set_mode(c, UPDATER_MODE_PREPARE);
+             break;
++#endif
+ 
+         case 's':
+             c->print = PRINT_SHELL_EVAL;
+@@ -1400,6 +1412,7 @@ static void print_latest(context_t *c)
+ }
+ 
+ 
++#ifdef __REFKIT_PREPARE__
+ const char *full_path(char *buf, path_t *path)
+ {
+     int n;
+@@ -1520,7 +1533,7 @@ static void initramfs_prepare(context_t *c)
+         log_fatal("failed to shuffle ostree root '%s' (%d: %s)",
+                   boot->deployment, errno, strerror(errno));
+ }
+-
++#endif
+ 
+ static void patch_procfs(context_t *c)
+ {
+@@ -1622,9 +1635,11 @@ int main(int argc, char *argv[])
+         patch_procfs(&c);
+         break;
+ 
++#ifdef __REFKIT_PREPARE__
+     case UPDATER_MODE_PREPARE:
+         initramfs_prepare(&c);
+         break;
++#endif
+ 
+ #ifdef __REFKIT_UPDATER__
+     case UPDATER_MODE_FETCH:
+-- 
+2.7.4
+

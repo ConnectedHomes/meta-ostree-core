@@ -329,6 +329,10 @@ class OSTreeUpdate(string.Formatter):
             bb.note(self.format('Creating EFI mount point /boot/efi in OSTree rootfs {OSTREE_ROOTFS} ...'))
             bb.utils.mkdirhier(os.path.join(self.OSTREE_ROOTFS, 'boot', 'efi'))
 
+        if True:
+            bb.note(self.format('Creating U-Boot mount point /boot/uboot in OSTree rootfs {OSTREE_ROOTFS} ...'))
+            bb.utils.mkdirhier(os.path.join(self.OSTREE_ROOTFS, 'boot', 'uboot'))
+
         bb.note(self.format('Copying pristine rootfs {IMAGE_ROOTFS}/home to OSTree rootfs {OSTREE_ROOTFS} ...'))
         oe.path.copyhardlinktree(os.path.join(self.IMAGE_ROOTFS, 'home'),
                                  os.path.join(self.OSTREE_ROOTFS, 'home'))

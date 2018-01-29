@@ -1,0 +1,86 @@
+#!/bin/sh
+
+# Whether U-Boot partition was already mounted.
+UBOOT_PREMOUNTED=""
+
+# Mount the U-Boot partition.
+mount_uboot_partition () {
+    local _path=${1:-/boot/uboot}
+
+    if test -e "$_path/MLO"; then
+        mount -o remount,rw "$_path"
+        UBOOT_PREMOUNTED=yes
+        return 0
+    fi
+
+    mount -t msdos /dev/disk/by-label/boot "$_path"
+}
+
+# Umount the U-Boot partition (if it was not already premounted).
+umount_uboot_partition () {
+    local _path=${1:-/boot/uboot}
+
+    if [ -n "$UBOOT_PREMOUNTED" ]; then
+        mount -o remount,ro "$_path"
+        return 0
+    fi
+
+    umount "$_path"
+}
+
+# Update U-Boot if it has changed.
+update_uboot_app () {
+    local _old="$1"
+    local _new="$2"
+    local _firmware=${3:-${_new}/lib/firmware}
+    local _uboot=${4:-/boot/uboot}
+    local _file _replace
+
+    echo "Copying new U-Boot..."
+    for _file in MLO u-boot.img uEnv.txt boot.scr; do
+        if test -r "${_firmware}/${_file}"; then
+            if ! cmp -s "${_firmware}/${_file}" "${_uboot}/${_file}"; then
+                _replace="${_replace} ${_file}"
+                $xeq cp "${_firmware}/${_file}" "${_uboot}/~${_file}"
+            fi
+        fi
+    done
+    $xeq sync
+    echo "Activating new U-Boot..."
+    for _file in ${_replace}; do
+        $xeq mv "${_uboot}/~${_file}" "${_uboot}/${_file}"
+        $xeq sync
+    done
+    echo "Removing old U-Boot configuration..."
+    for _file in uEnv.txt boot.scr; do
+        if test ! -r "${_firmware}/${_file}" -a -r "${_uboot}/${_file}"; then
+            $xeq rm "${_uboot}/${_file}";
+        fi
+    done
+    $xeq sync
+    return 0
+}
+
+# main script
+while [ "${1#-}" != "$1" -a -n "$1" ]; do
+    case $1 in
+        --dry-run|-n) xeq=echo; shift;;
+          --debug|-d) set -x; shift;;
+                   *) echo "ignoring unknown option $1..."; shift;;
+    esac
+done
+
+if ! mount_uboot_partition "$4"; then
+    echo "Failed to mount U-Boot partition."
+    exit 1
+fi
+
+if ! update_uboot_app "$1" "$2" "$3" "$4"; then
+    echo "Failed to update U-Boot."
+fi
+
+if ! umount_uboot_partition "$4"; then
+    echo "Failed to umount U-Boot partition."
+fi
+
+exit 0

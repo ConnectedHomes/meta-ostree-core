@@ -11,6 +11,7 @@ SRC_URI = "git://github.com/klihub/refkit-ostree-upgrade.git \
            file://0003-Conditionalise-UPDATER_MODE_PATCH.patch \
            file://0004-refkit-ostree-Fix-warnings.patch \
            file://0001-Remove-refkit-patch-ostree-param.service.patch \
+           file://00-update-uboot;subdir=git/hooks/post-apply.d \
            "
 
 # Modify these as desired

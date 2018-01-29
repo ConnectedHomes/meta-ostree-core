@@ -10,6 +10,7 @@ SRC_URI = "git://github.com/klihub/refkit-ostree-upgrade.git \
            file://0002-refkit-ostree-Conditionalise-UPDATER_MODE_PREPARE.patch \
            file://0003-Conditionalise-UPDATER_MODE_PATCH.patch \
            file://0004-refkit-ostree-Fix-warnings.patch \
+           file://0001-Remove-refkit-patch-ostree-param.service.patch \
            "
 
 # Modify these as desired

@@ -1,0 +1,46 @@
+From 04cc017e343cc261809cde4827fd88e63d44c625 Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@hivehome.com>
+Date: Mon, 29 Jan 2018 10:40:20 +0000
+Subject: [PATCH] Remove refkit-patch-ostree-param.service
+
+We don't need this as we're not having to do the UEFI dance
+---
+ Makefile.am                                |  1 -
+ services/refkit-patch-ostree-param.service | 13 -------------
+ 2 files changed, 14 deletions(-)
+ delete mode 100644 services/refkit-patch-ostree-param.service
+
+diff --git a/Makefile.am b/Makefile.am
+index b63ac58..3d724e3 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -7,7 +7,6 @@ scriptdir      = ${datadir}/${PACKAGE_NAME}/scripts
+ 
+ servicedir   = ${SYSTEMD_UNITDIR}
+ service_DATA = \
+-	services/refkit-patch-ostree-param.service \
+         services/refkit-update.service \
+         services/refkit-update-post-check.service \
+         services/refkit-reboot.service \
+diff --git a/services/refkit-patch-ostree-param.service b/services/refkit-patch-ostree-param.service
+deleted file mode 100644
+index 3d140bb..0000000
+--- a/services/refkit-patch-ostree-param.service
++++ /dev/null
+@@ -1,13 +0,0 @@
+-[Unit]
+-Description=Patch kernel command line with ostree parameter
+-DefaultDependencies=no
+-After=systemd-remount-fs.service systemd-tmpfiles-setup.service tmp.mount
+-Before=sysinit.target
+-
+-[Service]
+-Type=oneshot
+-ExecStart=/usr/bin/refkit-ostree-update --patch-procfs
+-RemainAfterExit=yes
+-
+-[Install]
+-WantedBy=sysinit.target
+-- 
+2.7.4
+

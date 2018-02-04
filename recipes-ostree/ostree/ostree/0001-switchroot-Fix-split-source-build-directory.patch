@@ -1,0 +1,29 @@
+From aec8e283c59efedb42878605c6f2bb9741cea018 Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@gmail.com>
+Date: Sun, 4 Feb 2018 12:08:29 +0000
+Subject: [PATCH] switchroot: Fix split source/build directory
+
+If you have split source and build directories, then building
+static ostree-prepare-root fails to find the source files.
+
+https://github.com/ostreedev/ostree/issues/1429
+---
+ Makefile-switchroot.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile-switchroot.am b/Makefile-switchroot.am
+index 6735c85..8a8ec57 100644
+--- a/Makefile-switchroot.am
++++ b/Makefile-switchroot.am
+@@ -45,7 +45,7 @@ if BUILDOPT_USE_STATIC_COMPILER
+ ostree_boot_SCRIPTS = ostree-prepare-root
+ 
+ ostree-prepare-root : $(ostree_prepare_root_SOURCES)
+-	$(STATIC_COMPILER) -o $@ -static $(ostree_prepare_root_SOURCES) $(AM_CPPFLAGS) $(AM_CFLAGS) $(DEFAULT_INCLUDES)
++	$(STATIC_COMPILER) -o $@ -static $(top_srcdir)/src/switchroot/ostree-prepare-root.c $(AM_CPPFLAGS) $(AM_CFLAGS) $(DEFAULT_INCLUDES)
+ else
+ ostree_boot_PROGRAMS += ostree-prepare-root
+ ostree_prepare_root_CFLAGS = $(AM_CFLAGS) -Isrc/switchroot
+-- 
+2.7.4
+

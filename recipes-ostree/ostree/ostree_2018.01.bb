@@ -9,7 +9,7 @@ SRC_URI = " \
     file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
     file://0001-ostree-tmpfiles-Include-ref-changes.patch \
     file://0001-Fix-misquoted-test.patch \
-    file://0001-ostree-prepare-root-Fix-split-build-src-compilation.patch \
+    file://0001-switchroot-Fix-split-source-build-directory.patch \
 "
 
 SRCREV = "d3fa95023e1d944f5923064d5b19cc6ee62cf80a"

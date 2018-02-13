@@ -9,7 +9,8 @@ SRC_URI = "git://git@github.com/intel/intel-iot-refkit.git;subpath=meta-refkit-c
            file://0003-Conditionalise-UPDATER_MODE_PATCH.patch \
            file://0004-refkit-ostree-Fix-warnings.patch \
            file://0001-Remove-refkit-patch-ostree-param.service.patch \
-           file://00-update-uboot;subdir=git/hooks/post-apply.d \
+           file://00-update-uboot;subdir=refkit-ostree/hooks/post-apply.d \
+           file://00-migrate-uboot;subdir=refkit-ostree/hooks/post-update-check.d \
            "
 
 # Modify these as desired

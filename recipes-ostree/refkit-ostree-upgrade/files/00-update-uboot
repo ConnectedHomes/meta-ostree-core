@@ -26,6 +26,23 @@ umount_uboot_partition () {
     umount "$_path"
 }
 
+# Migrate U-Boot environment
+migrate_uboot_environment () {
+    local _old="$1"
+    local _new="$2"
+    local _ubootenv=${3:-/boot/uboot/uboot.env}
+
+    if test -s "${_ubootenv}"; then
+        return 0
+    fi
+
+    if ! cmp -s "${_old}/usr/etc/fw_env.config" "${_new}/usr/etc/fw_env.config"; then
+        $xeq "${_old}/usr/sbin/fw_printenv" -c "${_old}/usr/etc/fw_env.config" | \
+            $xeq mkenvimage -s 131072 -o "${_ubootenv}"
+        $xeq sync
+    fi
+}
+
 # Update U-Boot if it has changed.
 update_uboot_app () {
     local _old="$1"
@@ -76,6 +93,8 @@ fi
 if ! update_uboot_app "$1" "$2" "$3" "$4"; then
     echo "Failed to update U-Boot."
 fi
+
+migrate_uboot_environment "$1" "$2"
 
 if ! umount_uboot_partition "$4"; then
     echo "Failed to umount U-Boot partition."

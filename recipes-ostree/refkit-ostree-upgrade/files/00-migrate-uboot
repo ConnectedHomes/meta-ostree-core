@@ -9,7 +9,7 @@ while [ "${1#-}" != "$1" -a -n "$1" ]; do
     esac
 done
 
-if test -e /boot/uboot/uboot.env; then
+if test -s /boot/uboot/uboot.env; then
     exit 0
 fi
 
@@ -17,6 +17,7 @@ if ! cmp -s "$1/usr/etc/fw_env.config" "$2/usr/etc/fw_env.config"; then
     $xeq "$1/usr/sbin/fw_printenv" -c "$1/usr/etc/fw_env.config" | \
         $xeq mkenvimage -s 131072 -o /boot/uboot/uboot.env
     sync
+    systemctl reboot
 fi
 
 exit 0

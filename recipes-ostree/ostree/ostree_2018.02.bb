@@ -8,11 +8,9 @@ SRC_URI = " \
     gitsm://git@github.com/ostreedev/ostree;protocol=https \
     file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
     file://0001-ostree-tmpfiles-Include-ref-changes.patch \
-    file://0001-Fix-misquoted-test.patch \
-    file://0001-switchroot-Fix-split-source-build-directory.patch \
 "
 
-SRCREV = "d3fa95023e1d944f5923064d5b19cc6ee62cf80a"
+SRCREV = "fd8a2830f669d56acac4f2bc4f19f8a695d981b9"
 
 PV := "${PV}+git${SRCPV}"
 S = "${WORKDIR}/git"

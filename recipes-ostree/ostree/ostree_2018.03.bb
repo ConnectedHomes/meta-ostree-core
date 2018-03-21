@@ -10,7 +10,7 @@ SRC_URI = " \
     file://0001-ostree-tmpfiles-Include-ref-changes.patch \
 "
 
-SRCREV = "fd8a2830f669d56acac4f2bc4f19f8a695d981b9"
+SRCREV = "fe2eb5fea5aaef7d6c4500e37bf1938b9e000750"
 
 PV := "${PV}+git${SRCPV}"
 S = "${WORKDIR}/git"

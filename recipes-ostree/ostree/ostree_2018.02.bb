@@ -15,7 +15,8 @@ SRCREV = "fd8a2830f669d56acac4f2bc4f19f8a695d981b9"
 PV := "${PV}+git${SRCPV}"
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig requires-systemd gobject-introspection
+inherit autotools pkgconfig gobject-introspection distro_features_check systemd
+REQUIRED_DISTRO_FEATURES_class-target = "systemd"
 
 do_install_append_class-target () {
     rm -r ${D}${sysconfdir}/grub.d

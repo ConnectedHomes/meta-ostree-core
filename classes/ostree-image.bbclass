@@ -21,9 +21,8 @@ IMAGE_FEATURES[validitems] += " \
     ostree \
 "
 
-# rekit-ostree RDEPENDS on ostree, so we don't need to list that here.
 FEATURE_PACKAGES_ostree = " \
-    refkit-ostree-upgrade \
+    ostree \
     ostree-systemd-generator \
     os-release \
 "

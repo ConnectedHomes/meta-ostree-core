@@ -31,6 +31,10 @@ FEATURE_PACKAGES_ostree = " \
 REQUIRED_DISTRO_FEATURES += "ostree usrmerge"
 inherit distro_features_check
 
+# Force the removal of the packages listed in ROOTFS_RO_UNNEEDED during
+# the generation of the root filesystem
+FORCE_RO_REMOVE = "1"
+
 ###########################################################################
 
 # These are intermediate working directories that are not meant to

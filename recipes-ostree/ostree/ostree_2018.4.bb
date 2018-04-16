@@ -8,6 +8,7 @@ SRC_URI = " \
     gitsm://git@github.com/ostreedev/ostree;protocol=https \
     file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
     file://0001-ostree-tmpfiles-Include-ref-changes.patch \
+    file://0001-switchroot-Don-t-log-if-running-as-pid1-minor-code-s.patch \
 "
 
 SRCREV = "d699a968623e238cf1f835a1a69852d78cc8a283"

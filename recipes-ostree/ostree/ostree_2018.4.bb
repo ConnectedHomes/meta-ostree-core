@@ -40,6 +40,8 @@ RDEPENDS_${PN}_class-target = " \
     ${PN}-prepare-root \
 "
 
+RRECOMMENDS_${PN} += "kernel-module-overlay"
+
 AUTO_LIBNAME_PKGS = ""
 
 # package configuration

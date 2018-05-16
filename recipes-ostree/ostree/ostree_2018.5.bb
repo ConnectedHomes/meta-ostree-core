@@ -8,10 +8,9 @@ SRC_URI = " \
     gitsm://git@github.com/ostreedev/ostree;protocol=https \
     file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
     file://0001-ostree-tmpfiles-Include-ref-changes.patch \
-    file://0001-switchroot-Don-t-log-if-running-as-pid1-minor-code-s.patch \
 "
 
-SRCREV = "d699a968623e238cf1f835a1a69852d78cc8a283"
+SRCREV = "b9385ac99c92e1ab2227bcfc6becc414104f5eef"
 
 PV := "${PV}+git${SRCPV}"
 S = "${WORKDIR}/git"
@@ -78,6 +77,7 @@ FILES_${PN} = " \
     ${libdir}/girepository-1.0 \
     ${libdir}/tmpfiles.d/ostree*.conf \
     ${libdir}/${BPN}/ostree-remount \
+    ${libdir}/systemd/system/ostree-finalize-staged.service \
     ${datadir}/${BPN} \
     ${datadir}/gir-1.0 \
     ${libexecdir}/* \

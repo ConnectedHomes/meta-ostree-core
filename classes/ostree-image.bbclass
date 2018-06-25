@@ -160,3 +160,22 @@ python () {
         # Publishing can run in parallel to wic image creation.
         bb.build.addtask('do_ostree_publish_rootfs', 'do_image_complete', 'do_ostree_prepare_rootfs', d)
 }
+
+# Create /usr/lib/ostree-boot/uEnv.txt
+python install_ostree_boot_uenv () {
+    import os
+
+    uenvflags = d.getVarFlags('OSTREE_BOOT_UENV')
+    if uenvflags:
+        uenvflags.pop('doc', None)
+
+        ostree_boot = os.path.join(d.getVar('IMAGE_ROOTFS'),
+                                   'usr', 'lib', 'ostree-boot')
+        bb.utils.mkdirhier(ostree_boot)
+        with open(os.path.join(ostree_boot, 'uEnv.txt'), 'w') as f:
+            # ensure reproducibility by sorting first
+            for k in sorted(uenvflags):
+                v = uenvflags[k]
+                print("=".join([k, v]), file=f)
+}
+ROOTFS_POSTPROCESS_COMMAND += "install_ostree_boot_uenv;"

@@ -19,6 +19,7 @@ VARIABLES = (
     'OSTREE_REPO',
     'OSTREE_GPGDIR',
     'OSTREE_GPGID',
+    'OSTREE_KARGS',
     'OSTREE_OS',
     'OSTREE_REMOTE',
     'OSTREE_BARE',
@@ -36,6 +37,7 @@ class OSTreeUpdate(string.Formatter):
 
     WHITESPACES_ALLOWED = (
         'OSTREE_COMMIT_SUBJECT',
+        'OSTREE_KARGS',
         )
 
     def __init__(self, d):
@@ -312,7 +314,8 @@ class OSTreeUpdate(string.Formatter):
         self.run_ostree('--repo={OSTREE_ROOTFS}/ostree/repo pull-local --remote=updates {OSTREE_BARE} {OSTREE_BRANCHNAME}')
 
         bb.note('Deploying sysroot from OSTree sysroot repository...')
-        self.run_ostree('admin --sysroot={OSTREE_ROOTFS} deploy --os={OSTREE_OS} updates:{OSTREE_BRANCHNAME}')
+        kargs = " ".join([ "--karg={}".format(x) for x in self.OSTREE_KARGS.split()])
+        self.run_ostree('admin --sysroot={OSTREE_ROOTFS} deploy --os={OSTREE_OS} {kargs} updates:{OSTREE_BRANCHNAME}', kargs=kargs)
 
         if self.OSTREE_REMOTE:
             bb.note(self.format('Setting OSTree remote to {OSTREE_REMOTE} ...'))

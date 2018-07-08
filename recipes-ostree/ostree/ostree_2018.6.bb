@@ -4,15 +4,15 @@ LICENSE = "LGPLv2.1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
-SRC_URI = " \
-    gitsm://git@github.com/ostreedev/ostree;protocol=https \
-    file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
-    file://0001-ostree-tmpfiles-Include-ref-changes.patch \
-    file://c49fed3335e6c5213c851ff7b2f00d92462bc210.patch \
-    file://0001-boot-Use-emergency.target-not-emergency.service.patch \
-    file://23f3ef275c2cbf8cc3d9f6ff38898c11a5440d75.patch \
-    file://0001-build-Use-ostree_prepare_root_CPPFLAGS-for-ostree-pr.patch \
-"
+SRC_URI = "gitsm://git@github.com/ostreedev/ostree;protocol=https \
+           file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
+           file://0001-ostree-tmpfiles-Include-ref-changes.patch \
+           file://c49fed3335e6c5213c851ff7b2f00d92462bc210.patch \
+           file://0001-boot-Use-emergency.target-not-emergency.service.patch \
+           file://23f3ef275c2cbf8cc3d9f6ff38898c11a5440d75.patch \
+           file://0001-build-Use-ostree_prepare_root_CPPFLAGS-for-ostree-pr.patch \
+           file://0001-switchroot-Move-late-run-ostree-booted-creation-to-o.patch \
+           "
 
 SRCREV = "31a356dca9656fcc62b5af11502e20d2d9aa7e91"
 

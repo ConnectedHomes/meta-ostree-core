@@ -1,26 +1,9 @@
-DESCRIPTION = "Versioned Operating System Repository."
+SUMMARY = "Versioned Operating System Repository."
+DESCRIPTION = "libostree is both a shared library and suite of command line tools that combines a "git-like" model for committing and downloading bootable filesystem trees, along with a layer for deploying them and managing the bootloader configuration."
 HOMEPAGE = "https://ostree.readthedocs.io"
 LICENSE = "LGPLv2.1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
-
-SRC_URI = "gitsm://git@github.com/ostreedev/ostree;protocol=https \
-           file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
-           file://0001-ostree-tmpfiles-Include-ref-changes.patch \
-           "
-
-SRCREV = "21318bbc1f6692fbced6d79f9fe3c3a9f9ab094d"
-
-PV := "${PV}+git${SRCPV}"
-S = "${WORKDIR}/git"
-
-inherit autotools pkgconfig gobject-introspection distro_features_check systemd
-REQUIRED_DISTRO_FEATURES_class-target = "systemd"
-
-do_install_append_class-target () {
-    rm -r ${D}${sysconfdir}/grub.d
-    rm ${D}${libexecdir}/libostree/grub2-15_ostree
-}
 
 DEPENDS = " \
     glib-2.0 libsoup-2.4 gpgme e2fsprogs \
@@ -33,14 +16,19 @@ DEPENDS_class-native = " \
     libcap-native fuse-native libarchive-native zlib-native xz-native \
 "
 
-RDEPENDS_${PN}_class-target = " \
-    gnupg \
-    ${PN}-prepare-root \
-"
+PV := "${PV}+git${SRCPV}"
 
-RRECOMMENDS_${PN} += "kernel-module-overlay"
+SRC_URI = "gitsm://git@github.com/ostreedev/ostree;protocol=https \
+           file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
+           file://0001-ostree-tmpfiles-Include-ref-changes.patch \
+           "
 
-AUTO_LIBNAME_PKGS = ""
+SRCREV = "21318bbc1f6692fbced6d79f9fe3c3a9f9ab094d"
+
+S = "${WORKDIR}/git"
+
+inherit autotools pkgconfig gobject-introspection distro_features_check systemd
+REQUIRED_DISTRO_FEATURES_class-target = "systemd"
 
 # package configuration
 PACKAGECONFIG ??= ""
@@ -59,15 +47,25 @@ EXTRA_OECONF_class-native += " \
     --disable-otmpfile \
 "
 
+do_configure_prepend() {
+    cd ${S}
+    NOCONFIGURE=1 ./autogen.sh
+    cd -
+}
+
+do_install_append_class-target () {
+    rm -r ${D}${sysconfdir}/grub.d
+    rm ${D}${libexecdir}/libostree/grub2-15_ostree
+}
+
+AUTO_LIBNAME_PKGS = ""
+
 # package content
 PACKAGES += " \
     ${PN}-systemd-generator \
     ${PN}-bash-completion \
     ${PN}-prepare-root \
 "
-
-SYSTEMD_SERVICE_${PN} = "ostree-remount.service"
-SYSTEMD_SERVICE_${PN}-prepare-root = "ostree-prepare-root.service"
 
 FILES_${PN} = " \
     ${bindir}/* \
@@ -88,10 +86,14 @@ FILES_${PN}-prepare-root = " \
     ${libdir}/systemd/system/ostree-prepare-root.service \
 "
 
-do_configure_prepend() {
-    cd ${S}
-    NOCONFIGURE=1 ./autogen.sh
-    cd -
-}
+RDEPENDS_${PN}_class-target = " \
+    gnupg \
+    ${PN}-prepare-root \
+"
+
+RRECOMMENDS_${PN} += "kernel-module-overlay"
+
+SYSTEMD_SERVICE_${PN} = "ostree-remount.service"
+SYSTEMD_SERVICE_${PN}-prepare-root = "ostree-prepare-root.service"
 
 BBCLASSEXTEND = "native"

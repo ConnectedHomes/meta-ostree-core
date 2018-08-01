@@ -1,0 +1,38 @@
+From dcd1522969a36eb4bed7a001154342355d0539ef Mon Sep 17 00:00:00 2001
+From: Colin Walters <walters@verbum.org>
+Date: Tue, 31 Jul 2018 17:04:26 -0400
+Subject: [PATCH] ostree-remount.service: RemainAfterExit=yes
+
+This is standard practice for units like this; e.g. it's what
+`systemd-remount-fs.service` does.  I think it may be part of
+or the whole cause for
+https://github.com/projectatomic/rpm-ostree/issues/1471
+
+I haven't reproduced the problem exactly but it seems to me that
+if the unit starts and is GC'd, then when systemd goes to execute
+a later unit it might end up restarting it.
+
+A noticeable side effect of this is that `systemctl status ostree-remount`
+exits with code `0` as expected.
+
+Closes: #1697
+Approved by: jlebon
+---
+ src/boot/ostree-remount.service | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/boot/ostree-remount.service b/src/boot/ostree-remount.service
+index 68209f9..47e1387 100644
+--- a/src/boot/ostree-remount.service
++++ b/src/boot/ostree-remount.service
+@@ -31,6 +31,7 @@ Before=systemd-tmpfiles-setup.service
+ 
+ [Service]
+ Type=oneshot
++RemainAfterExit=yes
+ ExecStart=/usr/lib/ostree/ostree-remount
+ StandardInput=null
+ StandardOutput=syslog
+-- 
+2.7.4
+

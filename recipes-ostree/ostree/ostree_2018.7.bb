@@ -16,11 +16,12 @@ DEPENDS_class-native = " \
     libcap-native fuse-native libarchive-native zlib-native xz-native \
 "
 
-PV := "${PV}+git${SRCPV}"
+PV .= "+git${SRCPV}"
 
 SRC_URI = "gitsm://git@github.com/ostreedev/ostree;protocol=https \
            file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
            file://0001-ostree-tmpfiles-Include-ref-changes.patch \
+           file://0001-ostree-remount.service-RemainAfterExit-yes.patch \
            "
 
 SRCREV = "21318bbc1f6692fbced6d79f9fe3c3a9f9ab094d"

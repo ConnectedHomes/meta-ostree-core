@@ -217,7 +217,6 @@ class OSTreeUpdate(string.Formatter):
         #     /var = mount point for persistent /ostree/deploy/refkit/var
         #     /home = mount point for persistent /home directory in the root partition
         #     /mnt = symlink to var/mnt
-        #     /tmp = symlink to sysroot/tmp (persistent)
         #
         # Additionally,
         #     /etc is moved to /usr/etc as the default config
@@ -232,7 +231,6 @@ class OSTreeUpdate(string.Formatter):
                 ('var', None),
                 ('home', 'var/home'),
                 ('mnt', 'var/mnt'),
-                ('tmp', 'sysroot/tmp'),
         ]
 
         # Relocate /opt into read-only /usr/opt
@@ -250,19 +248,6 @@ class OSTreeUpdate(string.Formatter):
                 bb.utils.mkdirhier(path)
             else:
                 os.symlink(link, path)
-
-        # Rewrite all tmpfiles.d configuration that refer to /tmp to
-        # /sysroot/tmp because systemd-tmpfiles doesn't follow symlinks
-        tmpfiles = (glob.glob(os.path.join(self.OSTREE_SYSROOT, 'usr', 'lib', 'tmpfiles.d', '*')) +
-                    glob.glob(os.path.join(self.OSTREE_SYSROOT, 'etc', 'tmpfiles.d', '*')))
-        for tmpfile in tmpfiles:
-            # avoid files linked to /dev/null
-            if os.path.isfile(tmpfile):
-                with open(tmpfile) as f:
-                    lines = f.readlines()
-                with open(tmpfile, 'w') as f:
-                    for line in lines:
-                        f.write(re.sub(r'(^\S+\s+)/tmp', '\\1/sysroot/tmp', line))
 
         # Preserve read-only copy of /etc for OSTree's three-way merge.
         os.rename(os.path.join(self.OSTREE_SYSROOT, 'etc'),

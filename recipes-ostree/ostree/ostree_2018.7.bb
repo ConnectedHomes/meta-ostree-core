@@ -8,12 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 DEPENDS = " \
     glib-2.0 libsoup-2.4 gpgme e2fsprogs \
     libcap fuse libarchive zlib xz \
-    systemd \
+    bison-native systemd \
 "
 
 DEPENDS_class-native = " \
     glib-2.0-native libsoup-2.4-native gpgme-native e2fsprogs-native \
     libcap-native fuse-native libarchive-native zlib-native xz-native \
+    bison-native \
 "
 
 PV .= "+git${SRCPV}"

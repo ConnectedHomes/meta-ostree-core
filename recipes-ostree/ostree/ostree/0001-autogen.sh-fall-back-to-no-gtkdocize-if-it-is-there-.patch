@@ -1,0 +1,32 @@
+From 64dc0c4d2669a3aeeb35e259899dfb8ace3a4245 Mon Sep 17 00:00:00 2001
+From: Krisztian Litkey <kli@iki.fi>
+Date: Sat, 10 Sep 2016 22:15:21 +0300
+Subject: [PATCH 1/2] autogen.sh: fall back to no gtkdocize if it is there but
+ fails.
+
+---
+ autogen.sh | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/autogen.sh b/autogen.sh
+index 689bba8..1f7d14c 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -25,7 +25,13 @@ EXTRA_DIST =
+ CLEANFILES =
+ EOF
+ else
+-        gtkdocize
++        gtkdocize || {
++	rm -f gtk-doc.make
++	cat > gtk-doc.make <<EOF
++EXTRA_DIST =
++CLEANFILES =
++EOF
++}
+ fi
+ 
+ if ! test -f libglnx/README.md || ! test -f bsdiff/README.md; then
+-- 
+2.7.4
+

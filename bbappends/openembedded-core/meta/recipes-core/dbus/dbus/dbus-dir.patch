@@ -1,0 +1,8 @@
+--- ./bus/tmpfiles.d/dbus.conf.in.orig	2018-01-02 08:45:03.899216935 +0000
++++ ./bus/tmpfiles.d/dbus.conf.in	2018-01-02 08:45:56.499370925 +0000
+@@ -2,4 +2,5 @@
+ 
+ # Make ${localstatedir}/lib/dbus/machine-id a symlink to /etc/machine-id
+ # if it does not already exist
++d @EXPANDED_LOCALSTATEDIR@/lib/dbus 0755 root root -
+ L @EXPANDED_LOCALSTATEDIR@/lib/dbus/machine-id - - - - /etc/machine-id

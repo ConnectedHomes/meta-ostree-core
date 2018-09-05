@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# We consider the ostree module always enabled if it is installed.
+ostree_enabled () {
+    if [ -d /rootfs/ostree/deploy ]; then
+        return 0
+    else
+        info "ostree: doesn't look like an ostree-based image... disabling."
+        return 1
+    fi
+}
+
+# Run the ostree image setup sequence.
+ostree_run () {
+    /usr/lib/ostree/ostree-prepare-root $ROOTFS_DIR
+    # Ensure we pass initramfs /run into booted image
+    cd $ROOTFS_DIR
+    mount --bind ../run run
+}

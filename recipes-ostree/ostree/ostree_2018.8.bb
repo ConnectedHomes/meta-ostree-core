@@ -7,14 +7,16 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 DEPENDS = " \
     glib-2.0 libsoup-2.4 gpgme e2fsprogs \
-    libcap fuse libarchive zlib xz \
+    libcap libarchive zlib xz \
     bison-native systemd \
+    ${@bb.utils.contains('PACKAGECONFIG', 'rofiles-fuse', 'fuse', '', d)} \
 "
 
 DEPENDS_class-native = " \
     glib-2.0-native libsoup-2.4-native gpgme-native e2fsprogs-native \
-    libcap-native fuse-native libarchive-native zlib-native xz-native \
+    libcap-native libarchive-native zlib-native xz-native \
     bison-native \
+    ${@bb.utils.contains('PACKAGECONFIG', 'rofiles-fuse', 'fuse-native', '', d)} \
 "
 
 PV .= "+git${SRCPV}"
@@ -31,11 +33,12 @@ S = "${WORKDIR}/git"
 inherit autotools pkgconfig gobject-introspection distro_features_check systemd
 REQUIRED_DISTRO_FEATURES_class-target = "systemd"
 
-# package configuration
-PACKAGECONFIG ??= ""
+# package configuration - match ostree defaults
+PACKAGECONFIG ??= "rofiles-fuse"
 
 PACKAGECONFIG[curl] = "--with-curl, --without-curl, curl"
 PACKAGECONFIG[man] = "--enable-man, --disable-man"
+PACKAGECONFIG[rofiles-fuse] = "--enable-rofiles-fuse, --disable-rofiles-fuse"
 PACKAGECONFIG[no-http2] = "--disable-http2"
 
 EXTRA_OECONF += " \

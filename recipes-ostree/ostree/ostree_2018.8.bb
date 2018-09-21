@@ -22,6 +22,7 @@ PV .= "+git${SRCPV}"
 SRC_URI = "gitsm://git@github.com/ostreedev/ostree;protocol=https \
            file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
            file://0001-ostree-tmpfiles-Include-ref-changes.patch \
+           file://1730.patch \
            "
 
 SRCREV = "7aa242c34cbfde2cd09d36d1ee2b32166287d9b6"

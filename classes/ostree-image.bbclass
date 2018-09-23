@@ -50,11 +50,11 @@ OSTREE_ROOTFS = "${IMAGE_ROOTFS}.ostree"
 OSTREE_OS ?= "${DISTRO}"
 
 # Each image is committed to its own, unique branch.
-OSTREE_BRANCHNAME ?= "${DISTRO}/${MACHINE}/${PN}"
+OSTREE_BRANCHNAME ?= "${DISTRO}/${DISTRO_CODENAME}/${MACHINE}/${PN}"
 
 # The subject of the commit that gets added to OSTREE_BRANCHNAME for
 # the current build.
-OSTREE_COMMIT_SUBJECT ?= 'Build ${BUILD_ID} of ${PN} in ${DISTRO}'
+OSTREE_COMMIT_SUBJECT ?= 'Build ${BUILD_ID} of ${PN} in ${DISTRO} (${DISTRO_CODENAME})'
 
 # This is where we export our builds in archive-z2 format. This repository
 # can be exposed over HTTP for clients to pull upgrades from. It can be

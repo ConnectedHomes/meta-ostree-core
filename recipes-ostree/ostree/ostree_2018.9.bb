@@ -22,10 +22,9 @@ PV .= "+git${SRCPV}"
 SRC_URI = "gitsm://git@github.com/ostreedev/ostree;protocol=https \
            file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
            file://0001-ostree-tmpfiles-Include-ref-changes.patch \
-           file://1730.patch \
            "
 
-SRCREV = "7aa242c34cbfde2cd09d36d1ee2b32166287d9b6"
+SRCREV = "f3eba6bcec39c163eb831c02c148ffa483292906"
 
 S = "${WORKDIR}/git"
 
@@ -86,7 +85,7 @@ FILES_${PN} = " \
     ${libdir}/girepository-1.0 \
     ${libdir}/tmpfiles.d/ostree*.conf \
     ${libdir}/${BPN}/ostree-remount \
-    ${libdir}/systemd/system/ostree-finalize-staged.service \
+    ${libdir}/systemd/system/ostree-* \
     ${datadir}/${BPN} \
     ${datadir}/gir-1.0 \
     ${libexecdir}/* \

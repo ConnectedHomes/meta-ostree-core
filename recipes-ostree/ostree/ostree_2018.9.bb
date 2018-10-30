@@ -19,7 +19,7 @@ DEPENDS_class-native = " \
 
 PV .= "+git${SRCPV}"
 
-SRC_URI = "gitsm://git@github.com/ostreedev/ostree;protocol=https \
+SRC_URI = "gitsm://github.com/ostreedev/ostree \
            file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
            file://0001-ostree-tmpfiles-Include-ref-changes.patch \
            "

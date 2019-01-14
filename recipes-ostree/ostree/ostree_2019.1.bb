@@ -24,7 +24,7 @@ SRC_URI = "gitsm://github.com/ostreedev/ostree \
            file://0001-ostree-tmpfiles-Include-ref-changes.patch \
            "
 
-SRCREV = "f3eba6bcec39c163eb831c02c148ffa483292906"
+SRCREV = "13bcc49603b54f117c44e25dc2b457b9f25d9dc0"
 
 S = "${WORKDIR}/git"
 

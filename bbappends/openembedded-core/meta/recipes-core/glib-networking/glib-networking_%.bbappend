@@ -1,11 +1,5 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-# Make sure we compile with ca-certificates support enabled.
-PACKAGECONFIG_append = " ca-certificates"
-
-DEPENDS += "ca-certificates"
-RDEPENDS_${PN} += "ca-certificates"
-
 # We need native version for ostree-/flatpak-native.
 BBCLASSEXTEND = "native"
 

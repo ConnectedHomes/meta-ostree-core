@@ -260,7 +260,11 @@ parse_command_line $*
 
 set -e
 
-GPG1="gpg --homedir=$GPG_HOME"
+if type -p gpg1 >/dev/null; then
+    GPG1="gpg1 --homedir=$GPG_HOME"
+else
+    GPG1="gpg --homedir=$GPG_HOME"
+fi
 GPG2="gpg2 --homedir=$GPG_HOME"
 
 gpg1_chkhome

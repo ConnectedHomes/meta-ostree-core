@@ -1,7 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 # We need native version for ostree-/flatpak-native.
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND_append = " native"
 
 # OE-core's relocatable.bbclass assumes that every package which
 # ends up creating a ${libdir}/pkgconfig directory in its sysroot

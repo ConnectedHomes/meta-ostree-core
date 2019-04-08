@@ -6,14 +6,12 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 DEPENDS = " \
-    glib-2.0 gpgme e2fsprogs \
-    libcap zlib xz \
-    bison-native systemd \
-"
-
-DEPENDS_class-native = " \
-    glib-2.0-native gpgme-native e2fsprogs-native \
-    libcap-native zlib-native xz-native \
+    glib-2.0 \
+    gpgme \
+    e2fsprogs \
+    libcap \
+    zlib \
+    xz \
     bison-native \
 "
 
@@ -28,22 +26,36 @@ SRCREV = "13bcc49603b54f117c44e25dc2b457b9f25d9dc0"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig gobject-introspection distro_features_check systemd
-REQUIRED_DISTRO_FEATURES_class-target = "systemd"
+inherit autotools pkgconfig gobject-introspection systemd
 
 # package configuration - match ostree defaults
 PACKAGECONFIG ??= " \
-    libarchive \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'selinux smack', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd libmount', '', d)} \
     rofiles-fuse \
     soup \
 "
 
+PACKAGECONFIG[avahi] = "--with-avahi, --without-avahi, avahi"
 PACKAGECONFIG[curl] = "--with-curl, --without-curl, curl"
+PACKAGECONFIG[gnutls] = "--with-crypto=gnutls, , gnutls"
 PACKAGECONFIG[libarchive] = "--with-libarchive, --without-libarchive, libarchive"
+PACKAGECONFIG[libmount] = "--with-libmount, --without-libmount, util-linux"
 PACKAGECONFIG[man] = "--enable-man, --disable-man"
-PACKAGECONFIG[no-http2] = "--disable-http2"
+PACKAGECONFIG[no-http2] = "--disable-http2, --enable-http2"
+PACKAGECONFIG[openssl] = "--with-crypto=openssl, , openssl"
 PACKAGECONFIG[rofiles-fuse] = "--enable-rofiles-fuse, --disable-rofiles-fuse, fuse"
+PACKAGECONFIG[selinux] = "--with-selinux, --without-selinux, libselinux"
+PACKAGECONFIG[smack] = "--with-smack, --without-smack, smack"
 PACKAGECONFIG[soup] = "--with-soup, --without-soup --disable-glibtest, libsoup-2.4"
+PACKAGECONFIG[systemd] = "--with-libsystemd --with-systemdsystemunitdir=${systemd_unitdir}/system, --without-libsystemd, systemd"
+
+# --disable-gtk-doc
+# --disable-gtk-doc-html
+# --disable-gtk-doc-pdf
+# --with-builtin-grub2-mkconfig
+# --enable-wrpseudo-compat
+# --disable-otmpfile"
 
 EXTRA_OECONF += " \
     --with-static-compiler='${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}' \

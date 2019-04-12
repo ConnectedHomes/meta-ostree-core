@@ -51,7 +51,6 @@ OSTREE_OS ?= "${DISTRO}"
 
 # Each image is committed to its own, unique branch.
 OSTREE_BRANCHNAME ?= "${DISTRO}/${DISTRO_CODENAME}/${MACHINE}/${PN}"
-BUILD_INFO_OSTREE_BRANCHNAME := "${OSTREE_BRANCHNAME}"
 
 # The subject of the commit that gets added to OSTREE_BRANCHNAME for
 # the current build.
@@ -180,3 +179,35 @@ python install_ostree_boot_uenv () {
                 print("=".join([k, v]), file=f)
 }
 ROOTFS_POSTPROCESS_COMMAND += "install_ostree_boot_uenv;"
+
+# Create /usr/lib/build.info
+python install_build_info () {
+    import os
+    import json
+    topdict = {}
+    subdict = {}
+    usrlib = os.path.join(d.getVar('IMAGE_ROOTFS'),
+                          'usr', 'lib')
+    binfoflags = d.getVarFlags('BUILD_INFO')
+    valid = binfoflags.pop('cicd', None)
+    # If cicd var flag has been set on BUILD_INFO (e.g. in auto.conf)
+    if valid == 'hda':
+        # Note the HDA-specifics here - other build systems
+        # will have to adapt these for their own context.
+        subdict['ostreeBranch'] = d.getVar('OSTREE_BRANCHNAME')
+        subdict['legacyVersionString'] = d.getVar('HDA_HUB_LEGACY_VERSION')
+        subdict['versionString'] = d.getVar('HDA_HUB_BASE_VERSION')
+        subdict['distro'] = d.getVar('DISTRO')
+        subdict['distroCodename'] = d.getVar('DISTRO_CODENAME')
+        subdict['machine'] = d.getVar('MACHINE')
+        subdict['dateTime'] = d.getVar('HDA_DATETIME_STAMP')
+        # Wrap it all up in a substructure for downstream inclusion
+        topdict['buildInfo'] = subdict
+        # Directory should be there, but just make sure
+        bb.utils.mkdirhier(usrlib)
+        with open(os.path.join(usrlib, 'build.info'), 'w') as fp:
+            # Let's be friendly and make it readable.
+            json.dump(topdict, fp, sort_keys=True, indent=4, separators=(',', ': '))
+    # Could add a Jenkins flag-handler here if we wanted.
+}
+ROOTFS_POSTPROCESS_COMMAND += "install_build_info;"

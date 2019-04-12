@@ -197,8 +197,8 @@ python install_build_info () {
         subdict['ostreeBranch'] = d.getVar('OSTREE_BRANCHNAME')
         subdict['legacyVersionString'] = d.getVar('HDA_HUB_LEGACY_VERSION')
         subdict['versionString'] = d.getVar('HDA_HUB_BASE_VERSION')
-        subdict['distro'] = d.getVar('DISTRO')
-        subdict['distroCodename'] = d.getVar('DISTRO_CODENAME')
+        subdict['distro'] = d.getVar('DISTRO']
+        subdict['distroCodename'] = d.getVar('DISTRO_CODENAME']
         subdict['machine'] = d.getVar('MACHINE')
         subdict['dateTime'] = d.getVar('HDA_DATETIME_STAMP')
         # Wrap it all up in a substructure for downstream inclusion

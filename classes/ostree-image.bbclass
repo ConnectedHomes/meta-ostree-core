@@ -51,7 +51,7 @@ OSTREE_OS ?= "${DISTRO}"
 
 # Each image is committed to its own, unique branch.
 OSTREE_BRANCHNAME ?= "${DISTRO}/${DISTRO_CODENAME}/${MACHINE}/${PN}"
-BUILD_INFO_OSTREE_BRANCHNAME := "${OSTREE_BRANCHNAME}"
+BUILD_INFO_OSTREE_BRANCHNAME = "${OSTREE_BRANCHNAME}"
 
 # The subject of the commit that gets added to OSTREE_BRANCHNAME for
 # the current build.

@@ -17,7 +17,7 @@ DEPENDS = " \
 
 SRC_URI = "gitsm://github.com/ostreedev/ostree \
            file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
-           file://0001-ostree-tmpfiles-Include-ref-changes.patch \
+           file://ostree-reffiles.conf \
            "
 
 S = "${WORKDIR}/git"
@@ -75,6 +75,7 @@ do_configure_prepend() {
 do_install_append_class-target () {
     rm -r ${D}${sysconfdir}/grub.d
     rm ${D}${libexecdir}/libostree/grub2-15_ostree
+    install -Dm0644 ${WORKDIR}/ostree-reffiles.conf ${D}${exec_prefix}/lib/tmpfiles.d/ostree-reffiles.conf
 }
 
 AUTO_LIBNAME_PKGS = ""

@@ -23,6 +23,7 @@ SRC_URI = "gitsm://github.com/ostreedev/ostree \
            file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
            file://ostree-reffiles.conf \
            "
+UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+)"
 
 S = "${WORKDIR}/git"
 

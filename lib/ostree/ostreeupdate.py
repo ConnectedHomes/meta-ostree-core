@@ -362,5 +362,6 @@ class OSTreeUpdate(string.Formatter):
             self.run_ostree('--repo={OSTREE_REPO} init --mode=archive-z2')
 
         self.run_ostree('--repo={OSTREE_REPO} pull-local --remote={OSTREE_OS} {OSTREE_BARE} {OSTREE_BRANCHNAME}')
-        self.run_ostree('--repo={OSTREE_REPO} commit {gpg_sign} --branch={OSTREE_BRANCHNAME} --tree=ref={OSTREE_OS}:{OSTREE_BRANCHNAME}')
+        self.run_ostree('--repo={OSTREE_REPO} commit {gpg_sign} --branch={OSTREE_BRANCHNAME} --tree=ref={OSTREE_OS}:{OSTREE_BRANCHNAME} --subject="{OSTREE_COMMIT_SUBJECT}"')
+        self.run_ostree('--repo={OSTREE_REPO} refs --delete {OSTREE_OS}:{OSTREE_BRANCHNAME}')
         self.run_ostree('--repo={OSTREE_REPO} summary {gpg_sign} -u')

@@ -8,7 +8,6 @@ import re
 import shutil
 import string
 import subprocess
-import tempfile
 
 VARIABLES = (
     'DEPLOY_DIR_IMAGE',
@@ -362,11 +361,7 @@ class OSTreeUpdate(string.Formatter):
             bb.utils.mkdirhier(self.OSTREE_REPO)
             self.run_ostree('--repo={OSTREE_REPO} init --mode=archive-z2')
 
-        with tempfile.TemporaryDirectory(dir=os.path.join(self.OSTREE_REPO, "tmp")) as tmp_repo:
-            self.run_ostree('--repo=%s init --mode=archive-z2' % tmp_repo)
-
-            self.run_ostree('--repo=%s pull-local {OSTREE_BARE} {OSTREE_BRANCHNAME}' % tmp_repo)
-            self.run_ostree('--repo={OSTREE_REPO} pull-local --remote={OSTREE_OS} %s {OSTREE_BRANCHNAME}' % tmp_repo)
-            self.run_ostree('--repo={OSTREE_REPO} commit {gpg_sign} --branch={OSTREE_BRANCHNAME} --tree=ref={OSTREE_OS}:{OSTREE_BRANCHNAME} --subject="{OSTREE_COMMIT_SUBJECT}"')
-            self.run_ostree('--repo={OSTREE_REPO} refs --delete {OSTREE_OS}:{OSTREE_BRANCHNAME}')
-            self.run_ostree('--repo={OSTREE_REPO} summary {gpg_sign} -u')
+        self.run_ostree('--repo={OSTREE_REPO} pull-local --remote={OSTREE_OS} {OSTREE_BARE} {OSTREE_BRANCHNAME}')
+        self.run_ostree('--repo={OSTREE_REPO} commit {gpg_sign} --branch={OSTREE_BRANCHNAME} --tree=ref={OSTREE_OS}:{OSTREE_BRANCHNAME} --subject="{OSTREE_COMMIT_SUBJECT}"')
+        self.run_ostree('--repo={OSTREE_REPO} refs --delete {OSTREE_OS}:{OSTREE_BRANCHNAME}')
+        self.run_ostree('--repo={OSTREE_REPO} summary {gpg_sign} -u')

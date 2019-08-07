@@ -49,6 +49,7 @@ PACKAGECONFIG[rofiles-fuse] = "--enable-rofiles-fuse, --disable-rofiles-fuse, fu
 PACKAGECONFIG[selinux] = "--with-selinux, --without-selinux, libselinux"
 PACKAGECONFIG[smack] = "--with-smack, --without-smack, smack"
 PACKAGECONFIG[soup] = "--with-soup, --without-soup --disable-glibtest, libsoup-2.4"
+PACKAGECONFIG[static] = ""
 PACKAGECONFIG[systemd] = "--with-libsystemd --with-systemdsystemunitdir=${systemd_unitdir}/system, --without-libsystemd, systemd"
 
 # --disable-gtk-doc
@@ -58,8 +59,8 @@ PACKAGECONFIG[systemd] = "--with-libsystemd --with-systemdsystemunitdir=${system
 # --enable-wrpseudo-compat
 # --disable-otmpfile"
 
-EXTRA_OECONF += " \
-    --with-static-compiler='${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}' \
+EXTRA_OECONF = " \
+    ${@bb.utils.contains('PACKAGECONFIG', 'static', '--with-static-compiler=\'${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}\'', '', d)} \
 "
 
 EXTRA_OECONF_class-native += " \

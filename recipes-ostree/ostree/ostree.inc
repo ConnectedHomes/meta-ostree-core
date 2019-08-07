@@ -22,15 +22,12 @@ DEPENDS = " \
 # http://downloads.yoctoproject.org/mirror/sources/git2_github.com.ostreedev.ostree.tar.gz
 PREMIRRORS = ""
 
-SRC_URI = "gitsm://github.com/ostreedev/ostree \
-           file://0001-autogen.sh-fall-back-to-no-gtkdocize-if-it-is-there-.patch \
-           file://ostree-reffiles.conf \
-           "
+SRC_URI = "gitsm://github.com/ostreedev/ostree"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+)"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig gobject-introspection systemd
+inherit autotools bash-completion gobject-introspection gtk-doc pkgconfig systemd
 
 # package configuration - match ostree defaults
 PACKAGECONFIG ??= " \
@@ -42,10 +39,12 @@ PACKAGECONFIG ??= " \
 
 PACKAGECONFIG[avahi] = "--with-avahi, --without-avahi, avahi"
 PACKAGECONFIG[curl] = "--with-curl, --without-curl, curl"
+PACKAGECONFIG[dracut] = "--with-dracut, --without-dracut"
 PACKAGECONFIG[gnutls] = "--with-crypto=gnutls, , gnutls"
 PACKAGECONFIG[libarchive] = "--with-libarchive, --without-libarchive, libarchive"
 PACKAGECONFIG[libmount] = "--with-libmount, --without-libmount, util-linux"
-PACKAGECONFIG[man] = "--enable-man, --disable-man"
+PACKAGECONFIG[man] = "--enable-man, --disable-man, libxslt-native docbook-xsl-stylesheets-native"
+PACKAGECONFIG[mkinitcpio] = "--with-mkinitcpio, --without-mkinitcpio"
 PACKAGECONFIG[no-http2] = "--disable-http2, --enable-http2"
 PACKAGECONFIG[openssl] = "--with-crypto=openssl, , openssl"
 PACKAGECONFIG[rofiles-fuse] = "--enable-rofiles-fuse, --disable-rofiles-fuse, fuse"
@@ -55,18 +54,11 @@ PACKAGECONFIG[soup] = "--with-soup, --without-soup --disable-glibtest, libsoup-2
 PACKAGECONFIG[static] = ""
 PACKAGECONFIG[systemd] = "--with-libsystemd --with-systemdsystemunitdir=${systemd_unitdir}/system, --without-libsystemd, systemd"
 
-# --disable-gtk-doc
-# --disable-gtk-doc-html
-# --disable-gtk-doc-pdf
-# --with-builtin-grub2-mkconfig
-# --enable-wrpseudo-compat
-# --disable-otmpfile"
-
 EXTRA_OECONF = " \
     ${@bb.utils.contains('PACKAGECONFIG', 'static', '--with-static-compiler=\'${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}\'', '', d)} \
 "
 
-EXTRA_OECONF_class-native += " \
+EXTRA_OECONF_class-native = " \
     --with-builtin-grub2-mkconfig \
     --enable-wrpseudo-compat \
     --disable-otmpfile \
@@ -76,52 +68,56 @@ EXTRA_OECONF_class-native += " \
 "
 
 do_configure_prepend() {
-    cd ${S}
-    NOCONFIGURE=1 ./autogen.sh
-    cd -
+    # this reflects what autogen.sh does, but our own wrappers for
+    # autoreconf allow it to work without the gyrations which exist there
+    cp ${S}/libglnx/Makefile-libglnx.am ${S}/libglnx/Makefile-libglnx.am.inc
+    cp ${S}/bsdiff/Makefile-bsdiff.am ${S}/bsdiff/Makefile-bsdiff.am.inc
 }
 
-do_install_append_class-target () {
-    rm -r ${D}${sysconfdir}/grub.d
-    rm ${D}${libexecdir}/libostree/grub2-15_ostree
-    install -Dm0644 ${WORKDIR}/ostree-reffiles.conf ${D}${exec_prefix}/lib/tmpfiles.d/ostree-reffiles.conf
-}
-
-AUTO_LIBNAME_PKGS = ""
-
-# package content
 PACKAGES += " \
-    ${PN}-bash-completion \
-    ${PN}-prepare-root \
+    ${PN}-dracut \
+    ${PN}-grub \
+    ${PN}-mkinitcpio \
+    ${PN}-switchroot \
 "
 
 FILES_${PN} = " \
-    ${bindir}/ \
-    ${sysconfdir} \
+    ${bindir}/ostree \
+    ${sysconfdir}/ostree/remotes.d \
     ${libdir}/lib*${SOLIBS} \
     ${libdir}/girepository-1.0 \
-    ${libdir}/tmpfiles.d/ostree*.conf \
+    ${libdir}/tmpfiles.d/ostree-tmpfiles.conf \
     ${libdir}/${BPN}/ostree-remount \
-    ${libdir}/systemd/system-generators \
-    ${libdir}/systemd/system/ostree-* \
+    ${systemd_unitdir}/system-generators/ostree-system-generator \
+    ${systemd_unitdir}/system/ostree-finalize-staged.path \
+    ${systemd_unitdir}/system/ostree-finalize-staged.service \
+    ${systemd_unitdir}/system/ostree-remount.service \
     ${datadir}/${BPN} \
     ${datadir}/gir-1.0 \
-    ${libexecdir}/ \
 "
-FILES_${PN}-bash-completion = "${datadir}/bash-completion/completions/ostree"
-FILES_${PN}-prepare-root = " \
+FILES_${PN}-dracut = " \
+    ${sysconfdir}/dracut.conf.d \
+    ${libdir}/dracut \
+"
+FILES_${PN}-grub = " \
+    ${sysconfdir}/grub.d \
+    ${libexecdir}/libostree/grub2-15_ostree \
+"
+FILES_${PN}-mkinitcpio = " \
+    ${sysconfdir}/ostree-mkinitcpio.conf \
+    ${libdir}/initcpio \
+"
+FILES_${PN}-switchroot = " \
     ${libdir}/ostree/ostree-prepare-root \
     ${libdir}/systemd/system/ostree-prepare-root.service \
 "
 
-RDEPENDS_${PN}_class-target = " \
-    gnupg \
-    ${PN}-prepare-root \
-"
+RDEPENDS_${PN}-dracut = "bash"
+RDEPENDS_${PN}-mkinitcpio = "bash"
 
 RRECOMMENDS_${PN} += "kernel-module-overlay"
 
 SYSTEMD_SERVICE_${PN} = "ostree-remount.service ostree-finalize-staged.path"
-SYSTEMD_SERVICE_${PN}-prepare-root = "ostree-prepare-root.service"
+SYSTEMD_SERVICE_${PN}-switchroot = "ostree-prepare-root.service"
 
 BBCLASSEXTEND = "native"

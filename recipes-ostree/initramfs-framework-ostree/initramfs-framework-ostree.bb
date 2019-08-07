@@ -15,4 +15,4 @@ do_install () {
 
 FILES_${PN} = "/init.d/91-ostree"
 
-RDEPENDS_${PN} = "ostree-prepare-root"
+RDEPENDS_${PN} = "ostree-switchroot"

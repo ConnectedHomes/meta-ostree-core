@@ -114,6 +114,10 @@ FILES_${PN}-switchroot = " \
 
 RDEPENDS_${PN}-dracut = "bash"
 RDEPENDS_${PN}-mkinitcpio = "bash"
+RDEPENDS_${PN}_class-target = " \
+    gnupg \
+    ${PN}-switchroot \
+"
 
 RRECOMMENDS_${PN} += "kernel-module-overlay"
 

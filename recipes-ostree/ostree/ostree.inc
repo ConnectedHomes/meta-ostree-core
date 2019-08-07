@@ -1,5 +1,8 @@
 SUMMARY = "Versioned Operating System Repository."
-DESCRIPTION = "libostree is both a shared library and suite of command line tools that combines a \"git-like\" model for committing and downloading bootable filesystem trees, along with a layer for deploying them and managing the bootloader configuration."
+DESCRIPTION = "libostree is both a shared library and suite of command line \
+tools that combines a \"git-like\" model for committing and downloading \
+bootable filesystem trees, along with a layer for deploying them and managing \
+the bootloader configuration."
 HOMEPAGE = "https://ostree.readthedocs.io"
 LICENSE = "LGPLv2.1"
 

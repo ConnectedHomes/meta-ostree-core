@@ -118,7 +118,7 @@ RDEPENDS_${PN}_class-target = " \
 
 RRECOMMENDS_${PN} += "kernel-module-overlay"
 
-SYSTEMD_SERVICE_${PN} = "ostree-remount.service"
+SYSTEMD_SERVICE_${PN} = "ostree-remount.service ostree-finalize-staged.path"
 SYSTEMD_SERVICE_${PN}-prepare-root = "ostree-prepare-root.service"
 
 BBCLASSEXTEND = "native"

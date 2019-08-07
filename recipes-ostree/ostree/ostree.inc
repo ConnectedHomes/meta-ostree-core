@@ -88,24 +88,23 @@ AUTO_LIBNAME_PKGS = ""
 
 # package content
 PACKAGES += " \
-    ${PN}-systemd-generator \
     ${PN}-bash-completion \
     ${PN}-prepare-root \
 "
 
 FILES_${PN} = " \
-    ${bindir}/* \
+    ${bindir}/ \
     ${sysconfdir} \
     ${libdir}/lib*${SOLIBS} \
     ${libdir}/girepository-1.0 \
     ${libdir}/tmpfiles.d/ostree*.conf \
     ${libdir}/${BPN}/ostree-remount \
+    ${libdir}/systemd/system-generators \
     ${libdir}/systemd/system/ostree-* \
     ${datadir}/${BPN} \
     ${datadir}/gir-1.0 \
-    ${libexecdir}/* \
+    ${libexecdir}/ \
 "
-FILES_${PN}-systemd-generator = "${libdir}/systemd/system-generators"
 FILES_${PN}-bash-completion = "${datadir}/bash-completion/completions/ostree"
 FILES_${PN}-prepare-root = " \
     ${libdir}/ostree/ostree-prepare-root \

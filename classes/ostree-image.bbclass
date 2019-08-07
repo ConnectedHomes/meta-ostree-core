@@ -23,7 +23,6 @@ IMAGE_FEATURES[validitems] += " \
 
 FEATURE_PACKAGES_ostree = " \
     ostree \
-    ostree-systemd-generator \
     os-release \
 "
 

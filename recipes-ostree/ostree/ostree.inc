@@ -37,6 +37,13 @@ PACKAGECONFIG ??= " \
     soup \
 "
 
+# We include soup because ostree can't (currently) be built without
+# soup or curl - https://github.com/ostreedev/ostree/issues/1897
+PACKAGECONFIG_class-native ??= " \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'selinux smack', d)} \
+    soup \
+"
+
 PACKAGECONFIG[avahi] = "--with-avahi, --without-avahi, avahi"
 PACKAGECONFIG[curl] = "--with-curl, --without-curl, curl"
 PACKAGECONFIG[dracut] = "--with-dracut, --without-dracut"
@@ -62,9 +69,6 @@ EXTRA_OECONF_class-native = " \
     --with-builtin-grub2-mkconfig \
     --enable-wrpseudo-compat \
     --disable-otmpfile \
-    --without-soup --disable-glibtest \
-    --disable-rofiles-fuse \
-    --without-libarchive \
 "
 
 # Path to ${prefix}/lib/ostree/ostree-grub-generator is hardcoded on the

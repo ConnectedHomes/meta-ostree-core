@@ -67,11 +67,21 @@ EXTRA_OECONF_class-native = " \
     --without-libarchive \
 "
 
+# Path to ${prefix}/lib/ostree/ostree-grub-generator is hardcoded on the
+# do_configure stage so we do depend on it
+SYSROOT_DIR = "${STAGING_DIR_TARGET}"
+SYSROOT_DIR_class-native = "${STAGING_DIR_NATIVE}"
+do_configure[vardeps] += "SYSROOT_DIR"
+
 do_configure_prepend() {
     # this reflects what autogen.sh does, but our own wrappers for
     # autoreconf allow it to work without the gyrations which exist there
     cp ${S}/libglnx/Makefile-libglnx.am ${S}/libglnx/Makefile-libglnx.am.inc
     cp ${S}/bsdiff/Makefile-bsdiff.am ${S}/bsdiff/Makefile-bsdiff.am.inc
+}
+
+do_install_append_class-native() {
+    create_wrapper ${D}${bindir}/ostree OSTREE_GRUB2_EXEC="${STAGING_LIBDIR_NATIVE}/ostree/ostree-grub-generator"
 }
 
 PACKAGES += " \

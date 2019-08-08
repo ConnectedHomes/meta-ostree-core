@@ -1,5 +1,3 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-
-DEPENDS += "glib-networking"
+DEPENDS_append = " glib-networking"
 
 BBCLASSEXTEND_append = " native"

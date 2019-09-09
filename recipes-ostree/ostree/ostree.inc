@@ -64,6 +64,7 @@ PACKAGECONFIG[smack] = "--with-smack, --without-smack, smack"
 PACKAGECONFIG[soup] = "--with-soup, --without-soup --disable-glibtest, libsoup-2.4"
 PACKAGECONFIG[static] = ""
 PACKAGECONFIG[systemd] = "--with-libsystemd --with-systemdsystemunitdir=${systemd_unitdir}/system, --without-libsystemd, systemd"
+PACKAGECONFIG[trivial-httpd-cmdline] = "--enable-trivial-httpd-cmdline, --disable-trivial-httpd-cmdline"
 
 EXTRA_OECONF = " \
     ${@bb.utils.contains('PACKAGECONFIG', 'static', '--with-static-compiler=\'${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}\'', '', d)} \
@@ -101,17 +102,19 @@ PACKAGES += " \
 
 FILES_${PN} = " \
     ${bindir}/ostree \
-    ${sysconfdir}/ostree/remotes.d \
-    ${libdir}/lib*${SOLIBS} \
-    ${libdir}/girepository-1.0 \
-    ${libdir}/tmpfiles.d/ostree-tmpfiles.conf \
+    ${bindir}/rofiles-fuse \
+    ${datadir}/${BPN} \
+    ${datadir}/gir-1.0 \
     ${libdir}/${BPN}/ostree-remount \
+    ${libdir}/girepository-1.0 \
+    ${libdir}/lib*${SOLIBS} \
+    ${libdir}/tmpfiles.d/ostree-tmpfiles.conf \
+    ${libexecdir}/libostree/ostree-trivial-httpd \
+    ${sysconfdir}/ostree/remotes.d \
     ${systemd_unitdir}/system-generators/ostree-system-generator \
     ${systemd_unitdir}/system/ostree-finalize-staged.path \
     ${systemd_unitdir}/system/ostree-finalize-staged.service \
     ${systemd_unitdir}/system/ostree-remount.service \
-    ${datadir}/${BPN} \
-    ${datadir}/gir-1.0 \
 "
 FILES_${PN}-dracut = " \
     ${sysconfdir}/dracut.conf.d \

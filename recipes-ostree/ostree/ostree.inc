@@ -78,8 +78,8 @@ SYSROOT_DIR_class-native = "${STAGING_DIR_NATIVE}"
 do_configure[vardeps] += "SYSROOT_DIR"
 
 do_configure_prepend() {
-    # this reflects what autogen.sh does, but our own wrappers for
-    # autoreconf allow it to work without the gyrations which exist there
+    # this reflects what autogen.sh does, but the OE wrappers for autoreconf
+    # allow it to work without the other gyrations which exist there
     cp ${S}/libglnx/Makefile-libglnx.am ${S}/libglnx/Makefile-libglnx.am.inc
     cp ${S}/bsdiff/Makefile-bsdiff.am ${S}/bsdiff/Makefile-bsdiff.am.inc
 }

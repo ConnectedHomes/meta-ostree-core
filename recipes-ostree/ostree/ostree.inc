@@ -22,7 +22,11 @@ DEPENDS = " \
 # http://downloads.yoctoproject.org/mirror/sources/git2_github.com.ostreedev.ostree.tar.gz
 PREMIRRORS = ""
 
-SRC_URI = "gitsm://github.com/ostreedev/ostree"
+SRC_URI = " \
+    gitsm://github.com/ostreedev/ostree \
+    file://missing-TEMP_FAILURE_RETRY.patch \
+"
+
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+)"
 
 S = "${WORKDIR}/git"

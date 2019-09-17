@@ -24,7 +24,8 @@ PREMIRRORS = ""
 
 SRC_URI = " \
     gitsm://github.com/ostreedev/ostree \
-    file://0001-macros-Add-TEMP_FAILURE_RETRY-for-musl.patch \
+    file://0001-Always-enable-trivial-httpd-for-tests.patch \
+    file://0002-Gate-ostree-trivial-httpd-on-BUILDOPT_TRIVIAL_HTTPD.patch \
 "
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+)"

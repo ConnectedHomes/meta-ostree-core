@@ -7,6 +7,7 @@ When running tests we always need ostree-trivial-httpd, so enable it
 unconditionally
 
 Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
+Upstream-Status: Submitted [https://github.com/ostreedev/ostree/pull/1912]
 ---
  Makefile.am        | 1 +
  ci/build.sh        | 5 +++++

@@ -7,6 +7,7 @@ When building without --enable-trivial-httpd-cmdline, don't build or install
 the ostree-trivial-httpd binary.
 
 Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
+Upstream-Status: Submitted [https://github.com/ostreedev/ostree/pull/1912]
 ---
  Makefile-ostree.am | 3 ++-
  configure.ac       | 3 +++

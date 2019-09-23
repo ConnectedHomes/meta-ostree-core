@@ -1,3 +1,5 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
 SRC_URI += "file://ostree-reffiles.conf"
 
 do_install_append_class-target () {

@@ -28,7 +28,7 @@ FEATURE_PACKAGES_ostree = " \
 
 # Additional sanity checking. Complements ostree-sanity in INHERIT.
 REQUIRED_DISTRO_FEATURES += "ostree usrmerge"
-inherit distro_features_check
+inherit features_check
 
 # Force the removal of the packages listed in ROOTFS_RO_UNNEEDED during
 # the generation of the root filesystem

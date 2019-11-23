@@ -6,7 +6,7 @@ SRC_URI += " \
     file://ostree \
 "
 
-inherit distro_features_check
+inherit features_check
 REQUIRED_DISTRO_FEATURES = "ostree"
 
 do_install () {

@@ -9,7 +9,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949"
 
 PR = "r9"
 
-SRC_URI = "${GNUPG_MIRROR}/gnupg/gnupg-${PV}.tar.bz2"
+SRC_URI = "${GNUPG_MIRROR}/gnupg/gnupg-${PV}.tar.bz2 \
+           file://0001-gnupg1-fix-build-with-gettext-0.20.x.patch \
+           "
 
 SRC_URI[md5sum] = "9bdeabf3c0f87ff21cb3f9216efdd01d"
 SRC_URI[sha256sum] = "6b47a3100c857dcab3c60e6152e56a997f2c7862c1b8b2b25adf3884a1ae2276"

@@ -1,0 +1,23 @@
+From 30b5f27217ce3c839bfd9fbef0469d1aeeb44329 Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@gmail.com>
+Date: Fri, 3 Jan 2020 14:14:59 +0000
+Subject: [PATCH] gnupg1: fix build with gettext 0.20.x
+
+Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 44adf6a19872..0972a14321ce 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -37,7 +37,7 @@ else
+ bzlib =
+ endif
+ 
+-SUBDIRS = m4 intl zlib ${bzlib} util mpi cipher tools \
++SUBDIRS = m4 zlib ${bzlib} util mpi cipher tools \
+           g10 keyserver po doc ${checks}
+ 
+ EXTRA_DIST = scripts/config.rpath PROJECTS BUGS config.h.in	\

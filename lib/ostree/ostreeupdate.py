@@ -147,11 +147,11 @@ class OSTreeUpdate(string.Formatter):
         versionedzimage = os.path.join(modules, 'vmlinuz')
         os.link(kernels[0], versionedzimage)
 
-        dtbs = glob.glob(os.path.join(bootdir, '*.dtb*'))
+        dtbs = glob.glob(os.path.join(bootdir, 'devicetree', '*.dtb*'))
         dtbdir = os.path.join(modules, 'dtb')
-        bb.utils.mkdirhier(dtbdir)
         for dtb in dtbs:
             if not os.path.islink(dtb):
+                bb.utils.mkdirhier(dtbdir)
                 versioneddtb = os.path.join(dtbdir, os.path.basename(dtb))
                 os.link(dtb, versioneddtb)
 
@@ -174,11 +174,11 @@ class OSTreeUpdate(string.Formatter):
         os.link(fitimage, versionedzimage)
         os.chown(versionedzimage, 0, 0)
 
-        dtbs = glob.glob(os.path.join(self.IMAGE_ROOTFS, 'boot', '*.dtb*'))
+        dtbs = glob.glob(os.path.join(self.IMAGE_ROOTFS, 'boot', 'devicetree', '*.dtb*'))
         dtbdir = os.path.join(moduledir, 'dtb')
-        bb.utils.mkdirhier(dtbdir)
         for dtb in dtbs:
             if not os.path.islink(dtb):
+                bb.utils.mkdirhier(dtbdir)
                 versioneddtb = os.path.join(dtbdir, os.path.basename(dtb))
                 os.link(dtb, versioneddtb)
 

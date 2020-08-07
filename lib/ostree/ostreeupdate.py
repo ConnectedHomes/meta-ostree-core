@@ -174,14 +174,6 @@ class OSTreeUpdate(string.Formatter):
         os.link(fitimage, versionedzimage)
         os.chown(versionedzimage, 0, 0)
 
-        dtbs = glob.glob(os.path.join(self.IMAGE_ROOTFS, 'boot', 'devicetree', '*.dtb*'))
-        dtbdir = os.path.join(moduledir, 'dtb')
-        for dtb in dtbs:
-            if not os.path.islink(dtb):
-                bb.utils.mkdirhier(dtbdir)
-                versioneddtb = os.path.join(dtbdir, os.path.basename(dtb))
-                os.link(dtb, versioneddtb)
-
     def ostreeify_sysroot(self):
         """
         Mangle sysroot into an OSTree-compatible layout.

@@ -1,10 +1,10 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI += " \
     file://initramfs-framework.patch \
 "
 
-RDEPENDS_initramfs-module-rootfs_append += " \
+RDEPENDS:initramfs-module-rootfs:append += " \
     util-linux-fsck \
     e2fsprogs-e2fsck \
 "

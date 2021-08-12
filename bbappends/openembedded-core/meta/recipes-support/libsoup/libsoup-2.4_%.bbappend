@@ -1,1 +1,1 @@
-DEPENDS_append = " glib-networking"
+DEPENDS:append = " glib-networking"

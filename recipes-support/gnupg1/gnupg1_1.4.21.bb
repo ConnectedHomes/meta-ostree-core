@@ -76,7 +76,7 @@ EXTRA_OECONF = "--disable-ldap \
                 ac_cv_sys_symbol_underscore=no \
 		"
 
-do_configure_prepend_class-target() {
+do_configure:prepend:class-target() {
     echo "ERROR: ##################################################"
     echo "ERROR: This recipe is meant for class-native usage only"
     echo "ERROR: to help key generation and signing."
@@ -87,7 +87,7 @@ do_configure_prepend_class-target() {
 }
 
 
-do_configure_prepend () {
+do_configure:prepend () {
     CFLAGS="$CFLAGS -fgnu89-inline"
 }
 
@@ -99,12 +99,12 @@ do_install () {
 }
 
 # split out gpgv from main package
-RDEPENDS_${PN}_class-target = "gpgv"
+RDEPENDS:${PN}:class-target = "gpgv"
 PACKAGES =+ "gpgv"
-FILES_gpgv = "${bindir}/gpgv"
+FILES:gpgv = "${bindir}/gpgv"
 
 # Exclude debug files from the main packages
-FILES_${PN} = "${bindir}/* ${datadir}/gnupg ${libexecdir}/gnupg/*"
+FILES:${PN} = "${bindir}/* ${datadir}/gnupg ${libexecdir}/gnupg/*"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[curl] = "--with-libcurl=${STAGING_LIBDIR},--without-libcurl,curl"

@@ -13,6 +13,6 @@ do_install () {
     install -D -m 0755 ${WORKDIR}/ostree ${D}/init.d/91-ostree
 }
 
-FILES_${PN} = "/init.d/91-ostree"
+FILES:${PN} = "/init.d/91-ostree"
 
-RDEPENDS_${PN} = "ostree-switchroot"
+RDEPENDS:${PN} = "ostree-switchroot"

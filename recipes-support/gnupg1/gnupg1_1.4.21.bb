@@ -86,9 +86,10 @@ do_configure:prepend:class-target() {
     exit 1
 }
 
-
+# Force gcc's traditional handling of inline to avoid issues with gcc 5
+# Force -fcommon to avoid issues with GCC 10 (which defaults to -fno-common)
 do_configure:prepend () {
-    CFLAGS="$CFLAGS -fgnu89-inline"
+    CFLAGS="$CFLAGS -fgnu89-inline -fcommon"
 }
 
 do_install () {

@@ -74,6 +74,8 @@ EXTRA_OECONF = "--disable-ldap \
 		--disable-selinux-support \
                 --without-readline \
                 ac_cv_sys_symbol_underscore=no \
+                --disable-nls \
+                --disable-gnupg-iconv \
 		"
 
 do_configure:prepend:class-target() {
@@ -84,6 +86,13 @@ do_configure:prepend:class-target() {
     echo "ERROR: Use gnupg version 2.x instead."
     echo "ERROR: ##################################################"
     exit 1
+}
+
+do_configure:append() {
+    # FIXME:
+    # Because options --disable-gnupg-iconv, --disable-nls do not work correctly
+    # and dependency on -liconv is not removed
+    sed -i 's/\-liconv//g' ${WORKDIR}/build/Makefile ${WORKDIR}/build/*/Makefile
 }
 
 # Force gcc's traditional handling of inline to avoid issues with gcc 5

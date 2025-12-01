@@ -1,0 +1,45 @@
+Upstream-Status: Inappropriate [oe specific]
+diff --git a/src/switchroot/ostree-prepare-root-static.c b/src/switchroot/ostree-prepare-root-static.c
+index 3995a6f0..f8c61ba2 100644
+--- a/src/switchroot/ostree-prepare-root-static.c
++++ b/src/switchroot/ostree-prepare-root-static.c
+@@ -66,7 +66,7 @@
+ #include <unistd.h>
+ 
+ // A temporary mount point
+-#define TMP_SYSROOT "/sysroot.tmp"
++#define TMP_SYSROOT "."
+ 
+ #include "ostree-mount-util.h"
+ 
+@@ -212,17 +212,14 @@ main (int argc, char *argv[])
+   if (mount (NULL, "/", NULL, MS_REC | MS_PRIVATE | MS_SILENT, NULL) < 0)
+     err (EXIT_FAILURE, "failed to make \"/\" private mount");
+ 
+-  if (mkdir (TMP_SYSROOT, 0755) < 0)
+-    err (EXIT_FAILURE, "couldn't create temporary sysroot %s", TMP_SYSROOT);
++  /* Make deploy_path a bind mount, so we can move it later */
++  if (mount (deploy_path, deploy_path, NULL, MS_BIND | MS_SILENT, NULL) < 0)
++    err (EXIT_FAILURE, "failed to make initial bind mount %s", deploy_path);
+ 
+   /* Run in the deploy_path dir so we can use relative paths below */
+   if (chdir (deploy_path) < 0)
+     err (EXIT_FAILURE, "failed to chdir to deploy_path");
+ 
+-  /* The deploy root starts out bind mounted to sysroot.tmp */
+-  if (mount (deploy_path, TMP_SYSROOT, NULL, MS_BIND | MS_SILENT, NULL) < 0)
+-    err (EXIT_FAILURE, "failed to make initial bind mount %s", deploy_path);
+-
+   /* This will result in a system with /sysroot read-only. Thus, two additional
+    * writable bind-mounts (for /etc and /var) are required later on. */
+   if (sysroot_readonly)
+@@ -326,9 +323,6 @@ main (int argc, char *argv[])
+         err (EXIT_FAILURE, "failed to bind mount ../../var to var");
+     }
+ 
+-  if (chdir (TMP_SYSROOT) < 0)
+-    err (EXIT_FAILURE, "failed to chdir to " TMP_SYSROOT);
+-
+   if (strcmp (root_mountpoint, "/") == 0)
+     {
+       /* pivot_root rotates two mount points around.  In this instance . (the

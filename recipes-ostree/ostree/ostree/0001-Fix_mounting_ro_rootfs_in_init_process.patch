@@ -1,6 +1,6 @@
 Upstream-Status: Inappropriate [oe specific]
 diff --git a/src/switchroot/ostree-prepare-root-static.c b/src/switchroot/ostree-prepare-root-static.c
-index 3995a6f0..f8c61ba2 100644
+index 3995a6f..cd299cc 100644
 --- a/src/switchroot/ostree-prepare-root-static.c
 +++ b/src/switchroot/ostree-prepare-root-static.c
 @@ -66,7 +66,7 @@
@@ -33,6 +33,15 @@ index 3995a6f0..f8c61ba2 100644
    /* This will result in a system with /sysroot read-only. Thus, two additional
     * writable bind-mounts (for /etc and /var) are required later on. */
    if (sysroot_readonly)
+@@ -314,7 +311,7 @@ main (int argc, char *argv[])
+   /* When running under systemd, /var will be handled by a 'var.mount' unit outside
+    * of initramfs.
+    * Systemd auto-detection can be overridden by a marker file under /run. */
+-  bool mount_var = true;
++  bool mount_var = false;
+ 
+   /* If required, bind-mount `/var` in the deployment to the "stateroot", which is
+    *  the shared persistent directory for a set of deployments.  More info:
 @@ -326,9 +323,6 @@ main (int argc, char *argv[])
          err (EXIT_FAILURE, "failed to bind mount ../../var to var");
      }

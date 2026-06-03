@@ -18,7 +18,7 @@ SRC_URI[sha256sum] = "6b47a3100c857dcab3c60e6152e56a997f2c7862c1b8b2b25adf3884a1
 
 inherit autotools gettext texinfo
 
-S = "${WORKDIR}/gnupg-${PV}"
+S = "${UNPACKDIR}/gnupg-${PV}"
 
 #   --with-egd-socket=NAME  use NAME for the EGD socket
 #   --with-photo-viewer=FIXED_VIEWER  set a fixed photo ID viewer

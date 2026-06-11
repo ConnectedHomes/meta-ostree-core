@@ -10,7 +10,7 @@ inherit features_check
 REQUIRED_DISTRO_FEATURES = "ostree"
 
 do_install () {
-    install -D -m 0755 ${WORKDIR}/ostree ${D}/init.d/91-ostree
+    install -D -m 0755 ${UNPACKDIR}/ostree ${D}/init.d/91-ostree
 }
 
 FILES:${PN} = "/init.d/91-ostree"

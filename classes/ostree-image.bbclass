@@ -45,6 +45,8 @@ OSTREE_SYSROOT = "${WORKDIR}/ostree-sysroot"
 OSTREE_BARE = "${WORKDIR}/ostree-repo"
 OSTREE_ROOTFS = "${IMAGE_ROOTFS}.ostree"
 
+PSEUDO_INCLUDE_PATHS:append = ",${OSTREE_SYSROOT},${OSTREE_ROOTFS},${OSTREE_BARE}"
+
 # OS deployment name on the target device.
 OSTREE_OS ?= "${DISTRO}"
 
@@ -130,7 +132,7 @@ def get_file_list(filenames):
 # doesn't matter.
 do_ostree_prepare_rootfs[depends] += " \
     ostree-native:do_populate_sysroot \
-    gnupg1-native:do_populate_sysroot \
+    gnupg-native:do_populate_sysroot \
 "
 
 # Take a per-build OSTree bare-user repository and export it to an

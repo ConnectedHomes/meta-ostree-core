@@ -164,7 +164,7 @@ class OSTreeUpdate(string.Formatter):
                                                      self.format('fitImage-{0}-{1}.bin', self.INITRAMFS_IMAGE, self.MACHINE)))
         else:
             fitimage = os.path.realpath(os.path.join(self.DEPLOY_DIR_IMAGE,
-                                                     self.format('fitImage-{0}.bin', self.MACHINE)))
+                                                     self.format('zImage-{0}.bin', self.MACHINE)))
         modules = os.path.join(self.OSTREE_SYSROOT, 'usr', 'lib', 'modules')
         modvers = glob.glob(os.path.join(modules, '*'))
         if len(modvers) != 1:

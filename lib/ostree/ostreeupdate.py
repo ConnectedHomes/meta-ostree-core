@@ -135,12 +135,13 @@ class OSTreeUpdate(string.Formatter):
         """
         Copy kernel, initramfs, and U-Boot config for OSTree.
         """
+        imagename = 'zImage' if (self.MACHINE) in ('nanohub') else 'fitImage'
         bootdir = os.path.join(self.IMAGE_ROOTFS, 'boot')
-        kernels = glob.glob(os.path.join(bootdir, 'zImage-*'))
+        kernels = glob.glob(os.path.join(bootdir, imagename+'-*'))
         if len(kernels) != 1:
             bb.fatal(self.format('Ambiguous kernel in {0}: {1}', bootdir, kernels))
         base = os.path.basename(kernels[0])
-        version = re.search('zImage-(?P<version>.*)', base).group('version')
+        version = re.search(imagename+'-(?P<version>.*)', base).group('version')
 
         modules = os.path.join(self.OSTREE_SYSROOT, 'usr', 'lib', 'modules',
                                version)
@@ -159,12 +160,13 @@ class OSTreeUpdate(string.Formatter):
         """
         Copy FIT image
         """
+        imagename = 'zImage' if (self.MACHINE) in ('nanohub') else 'fitImage'
         if self.INITRAMFS_IMAGE:
             fitimage = os.path.realpath(os.path.join(self.DEPLOY_DIR_IMAGE,
                                                      self.format('fitImage-{0}-{1}.bin', self.INITRAMFS_IMAGE, self.MACHINE)))
         else:
-            fitimage = os.path.realpath(os.path.join(self.DEPLOY_DIR_IMAGE,
-                                                     self.format('zImage-{0}.bin', self.MACHINE)))
+            fitimage = os.path.realpath(os.path.join(self.DEPLOY_DIR_IMAGE, imagename))
+
         modules = os.path.join(self.OSTREE_SYSROOT, 'usr', 'lib', 'modules')
         modvers = glob.glob(os.path.join(modules, '*'))
         if len(modvers) != 1:
